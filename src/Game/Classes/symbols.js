@@ -8,11 +8,12 @@ export class Symbols {
 		this.colIndex = colIndex;
 		this.x = rowIndex;
 		this.y = colIndex - canvas.height;
-		this.speed = 50;
+		this.speed = 50000;
 	}
 	//This is going to pause when any state except for spinning is enabled as there's no need for it in any other state (I think...)
-	update(context) {
-		return;
+	update(context, deltaTime) {
+		// Move the symbol downwards based on its speed and deltaTime
+		this.y += this.speed * deltaTime;
 	}
 	draw(context) {
 		console.log("draw on symbols class called");
@@ -40,7 +41,6 @@ export class Cat extends Symbols {
 	constructor(canvas, rowIndex, colIndex) {
 		super(canvas, rowIndex, colIndex);
 		this.image = document.getElementById("cat");
-		console.log(this.image);
 		this.symbolName = "cat";
 		this.symbolFrequency = 0.5;
 	}

@@ -1,4 +1,5 @@
 export const states = {
+	//Load state, throw loading screen and lock all input
 	LOAD: 0,
 	//when the wheel spins, lock all but one mouse input
 	SPINNING: 1,
@@ -11,14 +12,13 @@ export const states = {
 	//state for ruins payout, similar to payout class but used for ruin items
 	RUINS_PAYOUT: 5,
 };
-
 class State {
 	constructor(state) {
 		this.state = state;
 	}
 }
 
-//todo: do we need load state? Maybe for inbetween games eventually, or between main slots and ruins
+//Will lock all input and apply when website is originally loading and perhaps inbetween settings changes and game changes eventually
 export class LoadState extends State {
 	constructor(game) {
 		super("LoadState");

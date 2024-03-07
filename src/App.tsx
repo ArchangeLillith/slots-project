@@ -1,74 +1,117 @@
-import React from "react";
-import { useEffect } from "react";
-// import { GameObject } from "./Types.js";
+import React, { useEffect, useState, useRef } from "react";
+import { GlobalContext } from "./context";
 import { Game } from "./Game/game";
-import { UserContext, GlobalContext } from "./context.jsx";
 import "./App.css";
 
-function App() {
-	const [user, setUser] = React.useState({
-		user: "",
+const App: React.FC = () => {
+	const [globalContext, setGlobalContext] = React.useState({
+		state: "LOADING", //Initialize to loading state until everything is loaded, then it will change to idle
 	});
-	const [globalContext, setGlobalContext] = React.useState({ debug: true });
+	const [spinEnabled, setSpinEnabled] = useState(true);
+	const [debugState, setDebugState] = useState({ debug: true });
+	const CANVAS = useRef<HTMLCanvasElement>(null);
+	const CTX = useRef<CanvasRenderingContext2D | null>(null);
+	const GAME = useRef<any>(null);
+	const animationScheduled = useRef<boolean>(false);
 
-	//time handlers
-	let LAST_TIME = 0;
-	let CANVAS: HTMLCanvasElement;
-	let CTX: CanvasRenderingContext2D | null;
-	let GAME: any;
 	useEffect(() => {
 		setUp();
-	});
-	return (
-		<div className="App">
-			<p id="debug"></p>
-			<button id="debugBtn" onClick={debugToggle}>
-				Debug
-			</button>
-			<button id="spinBtn" onClick={startSpin}>
-				Spin~
-			</button>
-			<canvas id="canvas1"></canvas>
-			<img id="otter" src="images/Riverfolk-Warrior.png" alt="otter preload" />
-			<img id="cat" src="images/Riverfolk-Warrior.png" alt="cat preload" />
-			{/* <button id="stopBtn" onClick="Game.stopHandler()"> 
-				Stop~
-			</button> */}
-		</div>
-	);
+	}, []);
 
-	function setUp() {
-		//Global setup and declarations
-		CANVAS = document.getElementById("canvas1") as HTMLCanvasElement;
-		CTX = CANVAS.getContext("2d");
-		CANVAS.width = window.innerWidth;
-		CANVAS.height = window.innerHeight;
-		GAME = new Game(CANVAS, CANVAS.width, CANVAS.height, CTX);
-		animate(10);
-		console.log("Game", GAME);
-	}
-
-	function animate(timestamp: number) {
-		CTX?.clearRect(0, 0, CANVAS.width, CANVAS.height);
-		let deltaTime = timestamp - LAST_TIME;
-		LAST_TIME = timestamp;
-		GAME.update(deltaTime);
-		if (!GAME.gameOver) requestAnimationFrame(animate);
-		// else drawGameOver();
-	}
-
-	function debugToggle() {
-		let para = document.getElementById("debug");
-		setGlobalContext({ debug: !globalContext.debug });
-		if (globalContext.debug === true && para) {
-			para.innerHTML = GAME.currentState.state;
+	const setUp = () => {
+		if (CANVAS.current) {
+			CTX.current = CANVAS.current.getContext("2d");
+			if (CTX.current) {
+				CANVAS.current.width = window.innerWidth;
+				CANVAS.current.height = window.innerHeight;
+				GAME.current = new Game(
+					CANVAS.current,
+					CANVAS.current.width,
+					CANVAS.current.height,
+					CTX.current
+				);
+				setGlobalContext({ state: GAME.current.currentState });
+				animate(Date.now());
+			}
 		}
-	}
+	};
 
-	function startSpin() {
-		console.log(GAME);
-		GAME.spin();
-	}
-}
+	const animate = (timestamp: number) => {
+		if (CTX.current && CANVAS.current && GAME.current) {
+			CTX.current.clearRect(0, 0, CANVAS.current.width, CANVAS.current.height);
+			const deltaTime = timestamp - LAST_TIME;
+			LAST_TIME = timestamp;
+			GAME.current.update(deltaTime);
+
+			// Check if game is not over and animation is not already scheduled
+			if (!GAME.current.gameOver && !animationScheduled.current) {
+				// Mark animation as scheduled
+				animationScheduled.current = true;
+
+				// Schedule animation to run
+				requestAnimationFrame(() => {
+					// Clear scheduled animation flag
+					animationScheduled.current = false;
+
+					// Call animate again for the next animation frame
+					animate(Date.now());
+				});
+			}
+		}
+	};
+
+	const debugToggle = () => {
+		setDebugState((prevDebugState) => ({
+			...prevDebugState,
+			debug: !debugState.debug,
+		}));
+	};
+
+	const startSpin = () => {
+		if (GAME.current && spinEnabled) {
+			// Disable spin button to prevent multiple spins within the limit
+			setSpinEnabled(false);
+			GAME.current.spin();
+			// Enable spin button after 1 second
+			setTimeout(() => setSpinEnabled(true), 500);
+			GAME.current.currentState = "IDLE";
+		}
+		setGlobalContext({ state: GAME.current.currentState });
+	};
+
+	const stopSpin = () => {
+		if (GAME.current) {
+			GAME.current.stop();
+			GAME.current.gameOver = true;
+		}
+	};
+
+	return (
+		<GlobalContext.Provider value={{ globalContext, setGlobalContext }}>
+			<div className="App">
+				<p id="debug">{globalContext.state}</p>
+				<button id="debugBtn" onClick={debugToggle}>
+					Debug
+				</button>
+				<button id="spinBtn" onClick={startSpin} disabled={!spinEnabled}>
+					Spin~
+				</button>
+				<button id="stopBtn" onClick={stopSpin}>
+					Stop~
+				</button>
+				<canvas id="canvas1" ref={CANVAS}></canvas>
+				<img
+					id="otter"
+					src="images/Riverfolk-Warrior.png"
+					alt="otter preload"
+				/>
+				<img id="cat" src="images/Riverfolk-Warrior.png" alt="cat preload" />
+			</div>
+		</GlobalContext.Provider>
+	);
+};
+
+//Put here to ensure it doesn't get reinitialized at 0 when the component renders again
+let LAST_TIME = 0;
 
 export default App;

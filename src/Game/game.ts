@@ -16,11 +16,30 @@ import {
 	RuinsPayoutState,
 } from "./Utils/states.js";
 import InputHandler from "./input.js";
-let SYMBOLS = [];
+import { UserContext } from "../context.jsx";
+
+//Global definitions
+let SYMBOLS: any = [];
 let MASTER_SYMBOL_LIST = [Otter, Cat];
+const MAX_SYMBOLS: number = 10;
 
 export class Game {
-	constructor(canvas, width, height, context) {
+	canvas: HTMLCanvasElement;
+	width: number;
+	height: number;
+	context: any;
+	UI: any;
+	input: any;
+	debug: boolean;
+	score: number;
+	gameOver: boolean;
+	currentState: string;
+	constructor(
+		canvas: HTMLCanvasElement,
+		width: number,
+		height: number,
+		context: any
+	) {
 		this.canvas = canvas;
 		this.width = width;
 		this.height = height;
@@ -30,32 +49,28 @@ export class Game {
 		this.debug = true;
 		this.score = 0;
 		this.gameOver = false;
-		this.states = [
-			new LoadState(this),
-			new SpinningState(this),
-			new PayoutState(this),
-			new IdleState(this),
-			new RuinsGameState(this),
-			new RuinsPayoutState(this),
-		];
-		this.currentState = this.states[3];
+		this.currentState = "IDLE";
 	}
 
 	//todo Update function should be what is described below, not handle the spinning function as it is
-	/** Update handles the high level function of the game. It checks against game state first and will then decide based on that information which secondary function to call.
-	 *
-	 * @param deltaTime - used in timing logic, currently not implimented
-	 */
-	update(deltaTime) {
+	update(deltaTime: number) {
 		//If the current state is NOT an instance of SpinningState this returns.
-		if (!(this.currentState instanceof SpinningState)) {
-			//Initial call to start initializing pieces
+		//TODO this bypasses the typing, fix it eventually
+		if (!((this.currentState as any) instanceof SpinningState)) {
 			return;
 		}
-		//calling Game class draw method
-		this.addPieces(this.canvas, 1, 5);
+
+		// If there are too many symbols on the canvas, dont add more
+		if (SYMBOLS.length >= MAX_SYMBOLS) {
+			return;
+		}
+
+		//Add pieces if needed
+		this.addPiecesIfNeeded();
+
+		//Update current symbols
 		for (const symbol of SYMBOLS) {
-			symbol.update(this.context);
+			symbol.update(this.context, deltaTime);
 		}
 
 		//Handler for symbols that go off canvas
@@ -64,8 +79,8 @@ export class Game {
 				SYMBOLS.splice(i, 1);
 			}
 		}
-		//Refreshing the state for testing purposes
 
+		// Draw the updated state
 		this.draw(this.context);
 	}
 
@@ -74,25 +89,31 @@ export class Game {
 	 *
 	 */
 	spin() {
-		//Disabling button for any state not IdleState
-		// if(!(this.currentState instanceof IdleState)){
-		//     return;
-		// }
-
-		this.currentState = this.states[1];
-		console.log("spinning state entered");
-		//Generate 5 pieces
+		const { globalContext, setGlobalContext } = useContext(GlobalContext);
+		// Set current state to SpinningState
+		setGlobalContext({ state: "SPINNING" });
+		console.log("Spinning state entered");
+		// Generate 5 pieces
 	}
 
-	//todo not sure what this next will do, figure it out. Prob handle stopping the spinning when input happens
-	/**
-	 *
-	 */
 	stop() {
-		// if(!(this.currentState instanceof SpinningState)){
-		//     return;
-		// }
-		this.currentState = this.states[3];
+		// Set current state to IdleState
+		this.currentState = "IDLE";
+	}
+
+	// Determine if new pieces need to be added based on game logic
+	// Add pieces if necessary
+	addPiecesIfNeeded() {
+		this.addPieces(this.canvas, 1, 5);
+	}
+
+	// Handler for symbols that go off canvas
+	removeOffscreenSymbols() {
+		for (let i = 0; i < SYMBOLS.length; i++) {
+			if (SYMBOLS[i].y > this.canvas.height) {
+				SYMBOLS.splice(i, 1);
+			}
+		}
 	}
 
 	/**Called internally by update, calls to the Symbols class and calls their draw function. This is a seperate function because not all game states require a draw method, ie idleState
@@ -100,13 +121,10 @@ export class Game {
 	 * @param deltaTime - used in symbol classes for timing purposes
 	 * @param context - important to the function to know what it's drawing on
 	 */
-	draw(context) {
-		for (const nameOfSymbol of SYMBOLS) {
-			nameOfSymbol.draw(context);
+	draw(context: any) {
+		for (const symbol of SYMBOLS) {
+			symbol.draw(context);
 		}
-
-		//todo impliment UI
-		// this.UI.draw(context);
 	}
 
 	/**The generation function for the pieces. First it assigns a count variable for the rows (i), then iterating over each symbol with this variable and adding to the count to log where it is. Then it assigns the variable (j) to columns and doing the same thing, which will output a set of coordinates (i,j) to the function to tell the computer where symbols are in a grid layout.
@@ -119,7 +137,7 @@ export class Game {
 	 * @param rows - The number of rows the function should generate.
 	 * @param cols - The number of columns the function should generate.
 	 */
-	addPieces(canvas, rows, cols) {
+	addPieces(canvas: HTMLCanvasElement, rows: number, cols: number) {
 		// console.log("piece initializer engaged");
 		//Rows assigned here
 		for (let i = 0; i < rows; i++) {
