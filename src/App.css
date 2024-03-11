@@ -24,15 +24,15 @@
 	color: white;
 }
 
-.App-link {
-	color: #61dafb;
+canvas {
+	border: 1px solid #ffe57e;
 }
 
-@keyframes App-logo-spin {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: rotate(360deg);
-	}
+#otter,
+#cat,
+#alliance,
+#corvid,
+#eyrie,
+#duchy {
+	display: none;
 }

@@ -1,3 +1,4 @@
+import { EGameStates } from "../Enum.js";
 import {
 	Otter,
 	Cat,
@@ -5,126 +6,112 @@ import {
 	Eyrie,
 	Alliance,
 	Duchy,
-} from "./Classes/symbols.js";
-import { UI } from "../UI/UI.js";
-import {
-	LoadState,
-	SpinningState,
-	PayoutState,
-	IdleState,
-	RuinsGameState,
-	RuinsPayoutState,
-} from "./Utils/states.js";
+	Symbols,
+} from "./Classes/symbols.ts";
 import InputHandler from "./input.js";
-import { UserContext } from "../context.jsx";
 
 //Global definitions
-let SYMBOLS: any = [];
-let MASTER_SYMBOL_LIST = [Otter, Cat];
-const MAX_SYMBOLS: number = 10;
+let SYMBOLS: Symbols[] = [];
+const MAX_SYMBOLS: number = 20;
+const SYMBOL_HEIGHT: number = 200;
+let FIRST_TIME = true;
 
 export class Game {
 	canvas: HTMLCanvasElement;
 	width: number;
 	height: number;
-	context: any;
 	UI: any;
 	input: any;
 	debug: boolean;
 	score: number;
 	gameOver: boolean;
-	currentState: string;
+	MASTER_SYMBOL_LIST: any;
 	constructor(
 		canvas: HTMLCanvasElement,
 		width: number,
 		height: number,
-		context: any
+		MASTER_SYMBOL_LIST: Symbols[]
 	) {
 		this.canvas = canvas;
 		this.width = width;
 		this.height = height;
-		this.context = context;
-		this.UI = new UI(this);
 		this.input = new InputHandler(this);
 		this.debug = true;
 		this.score = 0;
 		this.gameOver = false;
-		this.currentState = "IDLE";
+		this.MASTER_SYMBOL_LIST = MASTER_SYMBOL_LIST;
 	}
 
-	//todo Update function should be what is described below, not handle the spinning function as it is
-	update(deltaTime: number) {
-		//If the current state is NOT an instance of SpinningState this returns.
-		//TODO this bypasses the typing, fix it eventually
-		if (!((this.currentState as any) instanceof SpinningState)) {
-			return;
-		}
+	update(context: any, state: string) {
+		// console.log(`STATE`, state);
+		// console.log("symbols.length = ", SYMBOLS.length);
 
-		// If there are too many symbols on the canvas, dont add more
-		if (SYMBOLS.length >= MAX_SYMBOLS) {
-			return;
+		//Pulls bottom row to the top for the object pooling
+		this.handleOffscreenSymbols(context);
+
+		//Applies speed to the symbols if the check passes
+		if (state === EGameStates.SpinningState) {
+			for (const symbol of SYMBOLS) {
+				symbol.update(context, 5);
+			}
+			//Otherwise draws symbols as static because of the default speed value as 0
+		} else {
+			for (const symbol of SYMBOLS) {
+				symbol.update(context);
+			}
 		}
 
 		//Add pieces if needed
 		this.addPiecesIfNeeded();
-
-		//Update current symbols
-		for (const symbol of SYMBOLS) {
-			symbol.update(this.context, deltaTime);
-		}
-
-		//Handler for symbols that go off canvas
-		for (let i = 0; i < SYMBOLS.length; i++) {
-			if (SYMBOLS[i].y > 620) {
-				SYMBOLS.splice(i, 1);
-			}
-		}
-
-		// Draw the updated state
-		this.draw(this.context);
-	}
-
-	//todo make this next part happen lol
-	/**Spin handles the generation of the pieces as the state demands. This should ONLY fire while in SpinningState, and calls to addPieces to handle the actual generation.
-	 *
-	 */
-	spin() {
-		const { globalContext, setGlobalContext } = useContext(GlobalContext);
-		// Set current state to SpinningState
-		setGlobalContext({ state: "SPINNING" });
-		console.log("Spinning state entered");
-		// Generate 5 pieces
 	}
 
 	stop() {
-		// Set current state to IdleState
-		this.currentState = "IDLE";
+		alert(`Game Stopped`);
 	}
 
 	// Determine if new pieces need to be added based on game logic
 	// Add pieces if necessary
 	addPiecesIfNeeded() {
-		this.addPieces(this.canvas, 1, 5);
+		// If there are too many symbols in the array, dont add more
+		if (SYMBOLS.length >= MAX_SYMBOLS) {
+			return;
+		}
+		//Otherwise add another row to the top
+		this.addPieces(this.canvas, 5, 1);
 	}
 
 	// Handler for symbols that go off canvas
-	removeOffscreenSymbols() {
+	handleOffscreenSymbols(canvas: HTMLCanvasElement) {
+		//Loops over all the elements
 		for (let i = 0; i < SYMBOLS.length; i++) {
-			if (SYMBOLS[i].y > this.canvas.height) {
-				SYMBOLS.splice(i, 1);
+			//Check if the symbol is off the canvas
+			if (SYMBOLS[i].y > this.canvas.height + SYMBOL_HEIGHT) {
+				//Gets a random number to index by
+				let math = Math.floor(Math.random() * this.MASTER_SYMBOL_LIST.length);
+				//Saves the X value of the old symbol to use in the new one
+				let x = SYMBOLS[i].x;
+				//Overwrites the old symbol with a brand new one using the randomization from the earlier math variable
+				SYMBOLS[i] = new this.MASTER_SYMBOL_LIST[math](
+					canvas,
+					SYMBOLS[i].x,
+					-200
+				);
+				//Sets the X and Y coords to what is expected, overwriting and not caring about what they were when the new symbol was made
+				SYMBOLS[i].x = x;
+				SYMBOLS[i].y = -200;
 			}
 		}
 	}
 
-	/**Called internally by update, calls to the Symbols class and calls their draw function. This is a seperate function because not all game states require a draw method, ie idleState
+	/**Called externally by the first animation loop, calls to the Symbols class and calls their draw function. This is a seperate function because not all game states require a draw method, ie idleState
 	 *
-	 * @param deltaTime - used in symbol classes for timing purposes
 	 * @param context - important to the function to know what it's drawing on
 	 */
-	draw(context: any) {
-		for (const symbol of SYMBOLS) {
-			symbol.draw(context);
-		}
+	initialize() {
+		if (FIRST_TIME) {
+			this.addPieces(this.canvas, 5, 4);
+			FIRST_TIME = false;
+		} else return;
 	}
 
 	/**The generation function for the pieces. First it assigns a count variable for the rows (i), then iterating over each symbol with this variable and adding to the count to log where it is. Then it assigns the variable (j) to columns and doing the same thing, which will output a set of coordinates (i,j) to the function to tell the computer where symbols are in a grid layout.
@@ -137,18 +124,20 @@ export class Game {
 	 * @param rows - The number of rows the function should generate.
 	 * @param cols - The number of columns the function should generate.
 	 */
-	addPieces(canvas: HTMLCanvasElement, rows: number, cols: number) {
-		// console.log("piece initializer engaged");
+	addPieces(
+		canvas: HTMLCanvasElement,
+		piecesPerRow: number,
+		piecesPerCol: number
+	) {
 		//Rows assigned here
-		for (let i = 0; i < rows; i++) {
+		for (let i = 0; i < piecesPerRow; i++) {
 			//Columns assigned here
-			for (let j = 0; j < cols; j++) {
+			for (let j = 0; j < piecesPerCol; j++) {
 				//Pushing to the array now, filling the predefined array.
-				let math = Math.round(Math.random());
-				SYMBOLS.push(new MASTER_SYMBOL_LIST[math](canvas, i, j));
+				let math = Math.floor(Math.random() * this.MASTER_SYMBOL_LIST.length);
+				SYMBOLS.push(new this.MASTER_SYMBOL_LIST[math](canvas, i, j));
 				// console.log(SYMBOLS);
 			}
 		}
-		// console.log("piece draw finished");
 	}
 }

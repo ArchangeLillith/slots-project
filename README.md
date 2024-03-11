@@ -47,8 +47,8 @@ This will be a space to lay out the logistics while I'm working on this project
 
 - Moving reels that can be stopped on button click
 - Scoring system like a real slot machine
-- Ability to bet min to max
-- Free or prime spins
+- Ability to bet min to max (this will multiply the return)
+- Free or prime spins (prime spins are given as a reward for completing something and are cheaper spins)
 - Jackpots
 - Animations and sound bytes for
   <br>-Jackpots
@@ -62,7 +62,7 @@ This will be a space to lay out the logistics while I'm working on this project
   <br>-Line to display full payout, static
   <br>-A scrolling/fade in-out tooltips section for what symbols pay out ect
   <br>-Cash out button
-  <br>-Perhaps a change game functionality?
+  <br>-Perhaps a change game functionality? (Other game modes would be like the dragon slots game Bob never played with the picture, or other ideas like that. Sticky wilds, ect. The base game will only use ruins and base symbols)
   <br>-Lines in play if applicable, and bet per line if applicable
 - Sound design for a small win (% less than 100 of total bet), medium win (% to be decided upon), large win (% to be decided upon), and jackpot. Perhaps separate sounds for ruins pick me as well.
 
@@ -108,16 +108,16 @@ This will be a space to lay out the logistics while I'm working on this project
 Keep in mind, what problems are we solving?
 
     function checkingForMatches(){
-        * Checking to calculate matches
-        * What symbols are matching?
-        * Are the symbols in a winning position
-        -Accounting for otters:
-            (symbol == symbol ||
-            symbol == otter)
-        * How do we decide where to check?
-        * If symbols match and are in position to score, what symbols are they (blacklist ruins in this as we have already checked that and we can store a variable from when we did saving where in the array they are and to ignore those)
-        * Turn off mousedown events while the algorithm is running so no janky stuff can happen
-        //! Ruins check - moved into its own algorithm
+        * Check for anything that would override base payouts, like ruins or the image (different game mode). Tise(these) functions run, record stuff, then come back here to calculate the rest of the symbols
+        * Check to calculate matches of base symbols
+          * What symbols are matching?
+          * Are the symbols in a winning position
+            -Accounting for otters:
+                (symbol == symbol ||
+                symbol == otter)
+          *!! How do we decide where to check?
+          * If symbols match and are in position to score, what symbols are they (blacklist ruins in this as we have already checked that and we can store a variable from when we did saving where in the array they are and to ignore those)
+          * Turn off mousedown events while the algorithm is running so no janky stuff can happen
     }
 
     function scoringAlgorithm(){
@@ -129,7 +129,7 @@ Keep in mind, what problems are we solving?
         * For ruins, state management for (none)/(avaliable)/(exhausted)
             -Different visuals and sounds for each state change
         * Money += (variable passed in from checking algorithm)
-        * Stats can be passed straight into stats.js from the main loop as things are calculated
+        * Stats can be passed straight into the state that deals with them
             -Example, [crows += variable passed in from scoring loop] before loop variable is added to the cumulative variable that will be added into global MONEY variable
     }
 
@@ -143,6 +143,7 @@ Keep in mind, what problems are we solving?
 
 - A button on UI to swap games
 - Use of the board, maybe winter/autumn themes? \* What would this change?
+- Sticky wilds, image to complete
 <!-- FILE STRUCTURE -->
 
 ## Files needed
@@ -162,12 +163,15 @@ Keep in mind, what problems are we solving?
           * A factory that can be called by the symbols creator
       * Stats dump file
           * A component file that can return the stats values if the user wishes.
+      *NO UI NEEDED
+          * This is all handled by React and how we add componenets to the main file. Eventually app.tsx will become our UI and call everything acting as the main UI
+          * We can handle different game modes here as well, adding checks for the game mode when we get there and only showing the game mode that's selected with (gamemode && <component>). We can then style all the different game modes, though watch for the canvas. We may need to extract and import that to each different game as the ID is what everything is based off of.
 
 <!-- QUESTIONS / THINGS TO SOLVE -->
 
 ## Questions
 
-- For ruins, when you get an item the first time should it pay out? Or do you just get the item?
+- For ruins pick me game, when you get an item the first time should it pay out? Or do you just get the item?
   - I imagine it'd be a base for matching ruins and if you get a dupe it gives a small bonus, like 30 base +5 for dupe.
 - How do we structure the if then?
   - Maybe we could do a generic if then, saying `if (symbol === symbol) then ...`
