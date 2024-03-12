@@ -8,21 +8,24 @@ export class Symbols {
 	canvas: HTMLCanvasElement;
 	x: number;
 	y: number;
+	canMove: boolean;
 	image: CanvasImageSource | null;
-	constructor(canvas: HTMLCanvasElement, rowIndex: number, colIndex: number) {
-		this.height = 200;
-		this.width = 200;
+	constructor(canvas: HTMLCanvasElement, colIndex: number, rowIndex: number) {
+		this.height = 150;
+		this.width = 150;
 		this.rowIndex = rowIndex;
 		this.colIndex = colIndex;
 		this.canvas = canvas;
-		this.x = this.rowIndex * (canvas.width / 5) + 100;
-		this.y = this.colIndex * (canvas.height / 3) - this.height - 100;
+		this.x = this.colIndex * (canvas.width / 6) + 225;
+		this.y = this.rowIndex * (canvas.height / 3.55) - this.height;
 		this.image = null;
+		this.canMove = false;
 	}
 	//This is going to pause when any state except for spinning is enabled as there's no need for it in any other state (I think...)
 	update(context: CanvasRenderingContext2D, speed = 0) {
+		if (this.canMove) this.y += speed;
+
 		// Move the symbol downwards based on its speed
-		this.y += speed;
 		//Zach how do I fix the typing here...
 		context.drawImage(
 			this.image as any,
@@ -96,3 +99,9 @@ export class Duchy extends Symbols {
 		this.symbolFrequency = ESymbolFrequency.Duchy;
 	}
 }
+
+//Where pieces should land XY coords
+// (225, 165) (545, 165) (865, 165) (1185, 165) (1505, 165)
+// (225, 481) (545, 481) (865, 481) (1185, 481) (1505, 481)
+// (225, 797) (545, 797) (865, 797) (1185, 797) (1505, 797)
+// (225, 1113) (545, 1113) (865, 1113) (1185, 1113) (1505, 1113)

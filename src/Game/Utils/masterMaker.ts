@@ -2,7 +2,6 @@ import { ESymbolFrequency } from "../../Enum";
 import { Alliance, Cat, Corvid, Duchy, Eyrie, Otter } from "../Classes/symbols";
 
 export function masterArrayMaker() {
-	console.log(`Mater array maker working`);
 	const MASTER_ARRAY = [];
 
 	//? Attempted to use a double for loop but accessing the enum woulnd't work because I couldn't index with a string

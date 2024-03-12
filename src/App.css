@@ -13,8 +13,13 @@
 	}
 }
 
+#canvas1 {
+	background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+		url("/public/images/Background.jpg");
+}
+
 .App-header {
-	background-color: lightslategray;
+	background-color: #778899;
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;

@@ -4,7 +4,6 @@ import "./App.css";
 import { drawStatusText } from "./Game/Utils/utilFunctions";
 import { EGameStates } from "./Enum.js";
 import { masterArrayMaker } from "./Game/Utils/masterMaker.ts";
-import { Symbols } from "./Game/Classes/symbols.ts";
 
 const App: React.FC = () => {
 	// console.log(`RELOADED APP`);
@@ -28,7 +27,7 @@ const App: React.FC = () => {
 			CANVAS.current.height = window.innerHeight;
 
 			//Once we have the current context we call and make a new game object
-			//TODO Here we should initialize the master symbol list as per each symbols rate
+			//Here we should initialize the master symbol list as per each symbols rate
 			const MASTER_SYMBOL_LIST: any = masterArrayMaker();
 			if (CTX.current) {
 				GAME.current = new Game(
@@ -75,27 +74,56 @@ const App: React.FC = () => {
 		}
 	};
 
-	const startSpin = () => {
+	const spinButtonClick = () => {
 		if (GAME.current && STATE !== EGameStates.SpinningState) {
 			STATE = EGameStates.SpinningState;
-			// Enable spin button after a delay
+			//Call to the game file to start the spin
+			GAME.current.spin(0);
 			setTimeout(() => {
-				//Manually reset state
-				STATE = EGameStates.IdleState;
-			}, 5000);
+				GAME.current.spin(1);
+			}, 500);
+			setTimeout(() => {
+				GAME.current.spin(2);
+			}, 1000);
+			setTimeout(() => {
+				GAME.current.spin(3);
+			}, 1500);
+			setTimeout(() => {
+				GAME.current.spin(4);
+			}, 2000);
+
+			setTimeout(() => {
+				// STATE = EGameStates.StoppingState;
+				GAME.current.stopSpin(0);
+				setTimeout(() => {
+					GAME.current.stopSpin(1);
+				}, 500);
+				setTimeout(() => {
+					GAME.current.stopSpin(2);
+				}, 1000);
+				setTimeout(() => {
+					GAME.current.stopSpin(3);
+				}, 1500);
+				setTimeout(() => {
+					GAME.current.stopSpin(4);
+					STATE = EGameStates.IdleState;
+				}, 2000);
+				//Manually reset the state
+			}, 2000);
 		}
 	};
 
 	const stopSpin = () => {
+		//PANIC BUTTON
 		if (GAME.current) {
-			GAME.current.stop();
+			// GAME.current.stop();
 			GAME.current.gameOver = true;
 		}
 	};
 
 	return (
 		<div className="App">
-			<button id="spinBtn" onClick={startSpin}>
+			<button id="spinBtn" onClick={spinButtonClick}>
 				Spin~
 			</button>
 			<button id="stopBtn" onClick={stopSpin}>
