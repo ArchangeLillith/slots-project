@@ -1,10 +1,10 @@
-import { EGameStates } from "../Enum.js";
+import { EGameStates } from "./Utils/Enum.ts";
 import { Symbols } from "./Classes/symbols.ts";
+import { FINAL_LOCATIONS_MAP, FinalLocation } from "./Utils/Types.ts";
 import InputHandler from "./input.js";
 
 //Global definitions
 let SYMBOLS: Symbols[] = [];
-const MAX_SYMBOLS: number = 20;
 const SYMBOL_HEIGHT: number = 200;
 let FIRST_TIME = true;
 const SYMBOLS_MAP: { [key: number]: Symbols[] } = {};
@@ -19,7 +19,6 @@ export class Game {
 	score: number;
 	gameOver: boolean;
 	MASTER_SYMBOL_LIST: any;
-	rowNumber: number;
 	constructor(
 		canvas: HTMLCanvasElement,
 		width: number,
@@ -34,7 +33,6 @@ export class Game {
 		this.score = 0;
 		this.gameOver = false;
 		this.MASTER_SYMBOL_LIST = MASTER_SYMBOL_LIST;
-		this.rowNumber = 5;
 	}
 
 	update(context: any, state: string) {
@@ -45,19 +43,20 @@ export class Game {
 		this.handleOffscreenSymbols(context);
 
 		//Applies speed to the symbols if the check passes
-		if (state === EGameStates.SpinningState) {
+		if (
+			state === EGameStates.SpinningState ||
+			state === EGameStates.StoppingState
+		) {
+			//*SPEED HANLDER PASSED HERE
 			for (const symbol of SYMBOLS) {
-				symbol.update(context, 25);
+				symbol.update(context, 55);
 			}
-			//Otherwise draws symbols as static because of the default speed value as 0
 		} else {
+			//Otherwise draws symbols as static because of the default speed value as 0
 			for (const symbol of SYMBOLS) {
 				symbol.update(context);
 			}
 		}
-
-		//Add pieces if needed
-		this.addPiecesIfNeeded();
 	}
 
 	spin(column: number) {
@@ -67,24 +66,36 @@ export class Game {
 	}
 
 	stopSpin(column: number) {
+		//Grabs the symbol from the column passed in
 		for (let symbol of SYMBOLS_MAP[column]) {
+			//Checks to see if it has a row index of i, and if so, sets the final location
+			for (let i = 0; i < 5; i++) {
+				if (symbol.rowIndex === i) {
+					symbol.y = (FINAL_LOCATIONS_MAP[i] as FinalLocation)[column].y;
+					symbol.x = (FINAL_LOCATIONS_MAP[i] as FinalLocation)[column].x;
+				}
+			}
 			symbol.canMove = false;
 		}
-	}
-
-	stop() {
-		alert(`Game Stopped`);
-	}
-
-	// Determine if new pieces need to be added based on game logic
-	// Add pieces if necessary
-	addPiecesIfNeeded() {
-		// If there are too many symbols in the array, dont add more
-		if (SYMBOLS.length >= MAX_SYMBOLS) {
-			return;
+		//? This will need to change if the game mode changes, or perhaps there's a better way to do this
+		if (column === 4) {
+			this.grabFinalSymbols();
 		}
-		//Otherwise add another row to the top
-		this.addNewPieces(this.canvas, 5);
+	}
+
+	grabFinalSymbols() {
+		let topRow = [];
+		for (let i = 0; i <= 5; i++) {
+			topRow.push(SYMBOLS[i]);
+		}
+		console.log(
+			`TOP ROW`,
+			topRow[0].image,
+			topRow[1].image,
+			topRow[2].image,
+			topRow[3].image,
+			topRow[4].image
+		);
 	}
 
 	// Handler for symbols that go off canvas
@@ -108,7 +119,57 @@ export class Game {
 				SYMBOLS[i].x = x;
 				SYMBOLS[i].y = -200;
 				SYMBOLS[i].canMove = true;
-				SYMBOLS_MAP[SYMBOLS[i].colIndex].push(SYMBOLS[i]);
+				//Zach this isn't working with the update to the symbols map, it DOES (sorta) work with the below commented out line.
+				// SYMBOLS_MAP[SYMBOLS[i].colIndex].push(SYMBOLS[i]);
+				// let indexInMap: number;
+				// console.log(`SYMBOLS at ${i}:`, SYMBOLS[i]);
+				for (let j = 0; j < Object.values(SYMBOLS_MAP).length; j++) {
+					if (
+						SYMBOLS_MAP[0][j].colIndex === SYMBOLS[i].colIndex &&
+						SYMBOLS_MAP[0][j].rowIndex === SYMBOLS[i].rowIndex
+					) {
+						SYMBOLS_MAP[0][j] = SYMBOLS[i];
+						// console.log(`SYMBOLS MAP MATCHES,`, SYMBOLS_MAP[0][j], SYMBOLS[i]);
+						// console.log(`MAP COLUMN IS ${SYMBOLS_MAP[0][j].colIndex}`);
+						// console.log(`MAIN COLUMN IS ${SYMBOLS[i].colIndex}`);
+					} else if (
+						SYMBOLS_MAP[1][j].colIndex === SYMBOLS[i].colIndex &&
+						SYMBOLS_MAP[1][j].rowIndex === SYMBOLS[i].rowIndex
+					) {
+						SYMBOLS_MAP[1][j] = SYMBOLS[i];
+						// console.log(`SYMBOLS MAP MATCHES,`, SYMBOLS_MAP[1][j], SYMBOLS[i]);
+						// console.log(`MAP COLUMN IS ${SYMBOLS_MAP[1][j].colIndex}`);
+						// console.log(`MAIN COLUMN IS ${SYMBOLS[i].colIndex}`);
+					} else if (
+						SYMBOLS_MAP[2][j].colIndex === SYMBOLS[i].colIndex &&
+						SYMBOLS_MAP[2][j].rowIndex === SYMBOLS[i].rowIndex
+					) {
+						SYMBOLS_MAP[2][j] = SYMBOLS[i];
+						// console.log(`SYMBOLS MAP MATCHES,`, SYMBOLS_MAP[2][j], SYMBOLS[i]);
+						// console.log(`MAP COLUMN IS ${SYMBOLS_MAP[2][j].colIndex}`);
+						// console.log(`MAIN COLUMN IS ${SYMBOLS[i].colIndex}`);
+					} else if (
+						SYMBOLS_MAP[3][j].colIndex === SYMBOLS[i].colIndex &&
+						SYMBOLS_MAP[3][j].rowIndex === SYMBOLS[i].rowIndex
+					) {
+						SYMBOLS_MAP[3][j] = SYMBOLS[i];
+						// console.log(`SYMBOLS MAP MATCHES,`, SYMBOLS_MAP[3][j], SYMBOLS[i]);
+						// console.log(`MAP COLUMN IS ${SYMBOLS_MAP[3][j].colIndex}`);
+						// console.log(`MAIN COLUMN IS ${SYMBOLS[i].colIndex}`);
+					} else if (
+						SYMBOLS_MAP[4][j].colIndex === SYMBOLS[i].colIndex &&
+						SYMBOLS_MAP[4][j].rowIndex === SYMBOLS[i].rowIndex
+					) {
+						SYMBOLS_MAP[4][j] = SYMBOLS[i];
+						// console.log(`SYMBOLS MAP MATCHES,`, SYMBOLS_MAP[4][j], SYMBOLS[i]);
+						// console.log(`MAP COLUMN IS ${SYMBOLS_MAP[4][j].colIndex}`);
+						// console.log(`MAIN COLUMN IS ${SYMBOLS[i].colIndex}`);
+					}
+				}
+
+				// indexInMap = Object.values(SYMBOLS_MAP[j]).indexOf(SYMBOLS[i]);
+				// if (indexInMap) SYMBOLS_MAP[j][indexInMap] = SYMBOLS[i];
+				// console.log(`SYMBOLS_MAP `, SYMBOLS_MAP);
 			}
 		}
 	}
@@ -121,9 +182,7 @@ export class Game {
 		if (FIRST_TIME) {
 			this.addPieces(this.canvas, 5, 5);
 			this.makeMap();
-			this.rowNumber = 5;
 			FIRST_TIME = false;
-			console.log(SYMBOLS);
 		} else return;
 	}
 
@@ -155,25 +214,8 @@ export class Game {
 		}
 	}
 
-	addNewPieces(canvas: HTMLCanvasElement, piecesPerCol: number) {
-		//Columns assigned here
-		for (let j = 0; j < piecesPerCol; j++) {
-			//Pushing to the array now, filling the predefined array.
-			let math = Math.floor(Math.random() * this.MASTER_SYMBOL_LIST.length);
-			const newPiece = new this.MASTER_SYMBOL_LIST[math](
-				canvas,
-				this.rowNumber,
-				j
-			);
-			SYMBOLS.push(newPiece);
-			SYMBOLS_MAP[j].push(newPiece);
-		}
-		//Keep the number of columns correct by incrimenting when we make a new one
-		this.rowNumber++;
-	}
-
 	makeMap() {
-		for (let i = 0; i <= SYMBOLS.length / 5; i++) {
+		for (let i = 0; i < SYMBOLS.length / 5; i++) {
 			let colArray: Symbols[] = SYMBOLS.filter(
 				(symbol) => symbol.colIndex === i
 			);

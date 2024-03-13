@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Game } from "./Game/game";
 import "./App.css";
-import { drawStatusText } from "./Game/Utils/utilFunctions";
-import { EGameStates } from "./Enum.js";
+import { drawStatusText } from "./Game/Utils/drawOnCanvas.ts";
+import { EGameStates } from "./Game/Utils/Enum.ts";
 import { masterArrayMaker } from "./Game/Utils/masterMaker.ts";
+import ReelBorders from "./Components/reel-borders.tsx";
 
 const App: React.FC = () => {
 	// console.log(`RELOADED APP`);
@@ -13,6 +14,9 @@ const App: React.FC = () => {
 	const CTX = useRef<CanvasRenderingContext2D | null>(null);
 	const GAME = useRef<any>(null);
 	const animationScheduled = useRef<boolean>(false);
+	let BALANCE: number = 3000;
+	let COINS_PER_LINE: number = 0.05;
+	let WINNINGS: number = 0;
 
 	useEffect(() => {
 		setUp();
@@ -93,7 +97,7 @@ const App: React.FC = () => {
 			}, 2000);
 
 			setTimeout(() => {
-				// STATE = EGameStates.StoppingState;
+				STATE = EGameStates.StoppingState;
 				GAME.current.stopSpin(0);
 				setTimeout(() => {
 					GAME.current.stopSpin(1);
@@ -113,23 +117,48 @@ const App: React.FC = () => {
 		}
 	};
 
-	const stopSpin = () => {
-		//PANIC BUTTON
-		if (GAME.current) {
-			// GAME.current.stop();
-			GAME.current.gameOver = true;
-		}
-	};
-
 	return (
 		<div className="App">
-			<button id="spinBtn" onClick={spinButtonClick}>
-				Spin~
-			</button>
-			<button id="stopBtn" onClick={stopSpin}>
-				Stop~
-			</button>
-			<canvas id="canvas1" ref={CANVAS}></canvas>
+			<div className="jackpot-container">
+				<div className="jackpot-right">
+					<p>JACKPOT</p>
+					<p>$50,000</p>
+				</div>
+				<div className="jackpot-left">
+					<p>JACKPOT</p>
+					<p>$30,000</p>
+				</div>
+			</div>
+			<div className="bottom-container">
+				<div className="balance-container">
+					<p className="balance-label">Balance</p>
+					<p className="balance-display">${BALANCE}</p>
+				</div>
+				<div className="coins-per-line-container">
+					<p className="coins-per-line-label">Coins per line</p>
+					<p className="coins-per-line-display">${COINS_PER_LINE}</p>
+				</div>
+
+				<button id="spinBtn" className="spinBtn" onClick={spinButtonClick}>
+					Spin~
+				</button>
+				<div className="wager-container">
+					{" "}
+					<p className="wager-label">Wager</p>
+					{/* Change this to lines-selected eventually */}
+					<p className="wager-display">${COINS_PER_LINE * 1}</p>
+				</div>
+
+				<p className="winnings-label">Winnings</p>
+				<p className="winnings-display">${WINNINGS}</p>
+			</div>
+			<div className="canvas-container">
+				<div className="reel-border-container">
+					<ReelBorders></ReelBorders>
+				</div>
+				<img src="images/border.png" alt="border" className="border"></img>
+				<canvas id="canvas1" ref={CANVAS}></canvas>
+			</div>
 			<img id="otter" src="images/Riverfolk-Warrior.png" alt="otter preload" />
 			<img id="cat" src="images/Cat-Warrior.png" alt="cat preload" />
 			<img id="corvid" src="images/Corvid-Warrior.png" alt="corvid preload" />

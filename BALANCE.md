@@ -234,3 +234,16 @@ https://owenmcg.com/games/2020/01/22/root.html
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>-->
+
+Pseudo code for the logic behind the algorithm:
+
+switch (column 0, row 0)
+case (equals column 1, row 0){
+if(equals column 2 row 0){
+if(equals column 3 row 0){
+if(equals column 4 row 0){
+five in a row
+}
+}
+}
+}

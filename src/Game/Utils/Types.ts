@@ -1,23 +1,14 @@
-export const EGameStates = {
-	SpinningState: "SPINNING",
-	StoppingState: "STOPPING",
-	LoadingState: "LOADING",
-	IdleState: "IDLE",
-	RuinsState: "RUINS",
+export type FinalLocations = {
+	[key: number]: FinalLocation;
 };
 
-//*Should equal 1 all together!!
-export const ESymbolFrequency = {
-	Otter: 0.5,
-	Cat: 0.1,
-	Eyrie: 0.1,
-	Corvid: 0.1,
-	Alliance: 0.1,
-	Duchy: 0.1,
+export type FinalLocation = {
+	[key: number]: { x: number; y: number };
 };
 
-export const FinalLocations = {
+export const FINAL_LOCATIONS_MAP: FinalLocations = {
 	//x is the outer, y is the inner for the location of the symbol on the grid
+	//! Changed to show massive difference to ensure working, real number for o Y is 165 NOT 600
 	0: {
 		0: { x: 225, y: 165 },
 		1: { x: 545, y: 165 },
@@ -33,11 +24,11 @@ export const FinalLocations = {
 		4: { x: 1505, y: 481 },
 	},
 	2: {
-		0: { x: 225, y: 865 },
-		1: { x: 545, y: 865 },
-		2: { x: 865, y: 865 },
-		3: { x: 1185, y: 865 },
-		4: { x: 1505, y: 865 },
+		0: { x: 225, y: 815 },
+		1: { x: 545, y: 815 },
+		2: { x: 865, y: 815 },
+		3: { x: 1185, y: 815 },
+		4: { x: 1505, y: 815 },
 	},
 	3: {
 		0: { x: 225, y: 1185 },

@@ -1,4 +1,4 @@
-import { ESymbolFrequency } from "../../Enum";
+import { ESymbolFrequency } from "../Utils/Enum";
 
 export class Symbols {
 	height: number;

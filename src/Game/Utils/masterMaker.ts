@@ -1,4 +1,4 @@
-import { ESymbolFrequency } from "../../Enum";
+import { ESymbolFrequency } from "./Enum";
 import { Alliance, Cat, Corvid, Duchy, Eyrie, Otter } from "../Classes/symbols";
 
 export function masterArrayMaker() {

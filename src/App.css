@@ -1,38 +1,127 @@
-.App {
-	text-align: center;
-}
-
-.App-logo {
-	height: 40vmin;
-	pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-	.App-logo {
-		animation: App-logo-spin infinite 20s linear;
-	}
-}
-
 #canvas1 {
 	background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
 		url("/public/images/Background.jpg");
+	width: 100%;
+	height: 100%;
+	border-radius: 20px;
 }
 
-.App-header {
-	background-color: #778899;
-	min-height: 100vh;
+* {
+	font-family: "Root";
+}
+.canvas-container {
+	width: 80vw;
+	height: 75vh;
+	margin: auto;
+	margin-top: 5%;
 	display: flex;
-	flex-direction: column;
+	z-index: 3;
+}
+
+.jackpot-container,
+.jackpot-container > div {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.jackpot-right,
+.jackpot-left {
+	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: calc(10px + 2vmin);
+}
+
+.jackpot-right > p,
+.jackpot-left > p {
+	margin-bottom: -25%;
+	margin-top: -5%;
+	color: lightslategray;
+	font-size: 40px;
+	margin-left: 30px;
+}
+
+.reel-border {
+	background: rgb(177, 150, 74);
+	position: absolute;
+	width: 10px;
+	height: 74vh;
+	z-index: 4;
+	top: 9.5%;
+}
+
+.reel-border-one {
+	background: linear-gradient(
+		90deg,
+		rgb(191, 143, 59) 0%,
+		rgb(251, 193, 45) 50%,
+		rgb(192, 133, 6) 100%
+	);
+	left: 28%;
+}
+.reel-border-two {
+	left: 42%;
+	background: linear-gradient(
+		90deg,
+		rgb(182, 156, 87) 0%,
+		rgb(255, 229, 58) 50%,
+		rgb(255, 222, 130) 100%
+	);
+}
+.reel-border-three {
+	left: 56%;
+	background: linear-gradient(
+		90deg,
+		rgba(177, 150, 74, 1) 0%,
+		rgba(255, 233, 88, 1) 50%,
+		rgba(255, 193, 18, 1) 100%
+	);
+}
+.reel-border-four {
+	background: linear-gradient(
+		90deg,
+		rgb(191, 143, 59) 0%,
+		rgb(251, 193, 45) 50%,
+		rgb(192, 133, 6) 100%
+	);
+	left: 70%;
+}
+
+.border {
+	position: absolute;
+	top: 85px;
+	left: 30;
+	width: 80vw;
+	height: 77vh;
+	z-index: 5;
+	transform-origin: center;
+}
+
+.spinBtn,
+.stopBtn {
+	transform: translate(-50%, -50%);
+	width: 150px;
+	height: 40px;
+	background-color: lightskyblue;
+	border: none;
+	border-radius: 3px;
+	margin: 2%;
+	transition: all 0.5s;
+}
+
+.stopBtn {
+	position: absolute;
+	top: 50%;
+	z-index: 3;
+	right: 0;
+}
+
+.spinBtn:hover,
+.stopBtn:hover {
+	background-color: darkblue;
 	color: white;
 }
-
-canvas {
-	border: 1px solid #ffe57e;
-}
-
 #otter,
 #cat,
 #alliance,
@@ -40,4 +129,28 @@ canvas {
 #eyrie,
 #duchy {
 	display: none;
+}
+
+body {
+	overflow: hidden;
+}
+
+.bottom-container {
+	position: absolute;
+	z-index: 2;
+	bottom: 5%;
+	width: 80vw;
+	height: 40px;
+	left: 50vw;
+	transform: translate(-50%, -50%);
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+
+@font-face {
+	font-family: "Root";
+	src: local("Luminari-Regular"),
+		url(../public/Luminari-Regular.ttf) format("truetype");
 }
