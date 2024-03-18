@@ -14,7 +14,8 @@ const App: React.FC = () => {
 	const CTX = useRef<CanvasRenderingContext2D | null>(null);
 	const GAME = useRef<any>(null);
 	const animationScheduled = useRef<boolean>(false);
-	let BALANCE: number = 3000;
+	let DOLLAR_BALANCE: number = 30;
+	let COIN_BALANCE: number = 0;
 	let COINS_PER_LINE: number = 0.05;
 	let WINNINGS: number = 0;
 
@@ -132,7 +133,16 @@ const App: React.FC = () => {
 			<div className="bottom-container">
 				<div className="balance-container">
 					<p className="balance-label">Balance</p>
-					<p className="balance-display">${BALANCE}</p>
+					{COIN_BALANCE.toString().length === 1 && (
+						<p className="balance-display">
+							${DOLLAR_BALANCE}.{COIN_BALANCE}0
+						</p>
+					)}
+					{COIN_BALANCE.toString().length !== 1 && (
+						<p className="balance-display">
+							${DOLLAR_BALANCE}.{COIN_BALANCE}
+						</p>
+					)}
 				</div>
 				<div className="coins-per-line-container">
 					<p className="coins-per-line-label">Coins per line</p>
@@ -143,7 +153,6 @@ const App: React.FC = () => {
 					Spin~
 				</button>
 				<div className="wager-container">
-					{" "}
 					<p className="wager-label">Wager</p>
 					{/* Change this to lines-selected eventually */}
 					<p className="wager-display">${COINS_PER_LINE * 1}</p>
@@ -160,7 +169,18 @@ const App: React.FC = () => {
 				<canvas id="canvas1" ref={CANVAS}></canvas>
 			</div>
 			<img id="otter" src="images/Riverfolk-Warrior.png" alt="otter preload" />
+			<img
+				id="otter-winner"
+				src="images/otter-winner.png"
+				alt="otter preload"
+			/>
 			<img id="cat" src="images/Cat-Warrior.png" alt="cat preload" />
+			<img
+				id="alliance-winner"
+				src="images/alliance-winner.png"
+				alt="alliance-winner preload"
+			/>
+			<img id="cat-winner" src="images/cat-winner.png" alt="cat preload" />
 			<img id="corvid" src="images/Corvid-Warrior.png" alt="corvid preload" />
 			<img id="eyrie" src="images/Eyrie-Warrior.png" alt="eyrie preload" />
 			<img id="duchy" src="images/Duchy-Warrior.png" alt="duchy preload" />

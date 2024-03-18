@@ -2,6 +2,7 @@ import { EGameStates } from "./Utils/Enum.ts";
 import { Symbols } from "./Classes/symbols.ts";
 import { FINAL_LOCATIONS_MAP, FinalLocation } from "./Utils/Types.ts";
 import InputHandler from "./input.js";
+import scoringAlgorithm from "./Utils/scoring.ts";
 
 //Global definitions
 let SYMBOLS: Symbols[] = [];
@@ -36,9 +37,6 @@ export class Game {
 	}
 
 	update(context: any, state: string) {
-		// console.log(`STATE`, state);
-		// console.log("symbols.length = ", SYMBOLS.length);
-
 		//Pulls bottom row to the top for the object pooling
 		this.handleOffscreenSymbols(context);
 
@@ -67,35 +65,69 @@ export class Game {
 
 	stopSpin(column: number) {
 		//Grabs the symbol from the column passed in
-		for (let symbol of SYMBOLS_MAP[column]) {
+		SYMBOLS_MAP[column].forEach((symbol: Symbols, index: number) => {
 			//Checks to see if it has a row index of i, and if so, sets the final location
-			for (let i = 0; i < 5; i++) {
-				if (symbol.rowIndex === i) {
-					symbol.y = (FINAL_LOCATIONS_MAP[i] as FinalLocation)[column].y;
-					symbol.x = (FINAL_LOCATIONS_MAP[i] as FinalLocation)[column].x;
-				}
-			}
+			symbol.y = (FINAL_LOCATIONS_MAP[column] as FinalLocation)[index].y;
+			symbol.x = (FINAL_LOCATIONS_MAP[column] as FinalLocation)[index].x;
+
 			symbol.canMove = false;
-		}
+		});
 		//? This will need to change if the game mode changes, or perhaps there's a better way to do this
 		if (column === 4) {
 			this.grabFinalSymbols();
 		}
 	}
 
+	//? this will also need to change if the game mode changes
 	grabFinalSymbols() {
 		let topRow = [];
-		for (let i = 0; i <= 5; i++) {
+		let midRow = [];
+		let botRow = [];
+		for (let i = 1; i < SYMBOLS.length; i += 5) {
 			topRow.push(SYMBOLS[i]);
 		}
-		console.log(
-			`TOP ROW`,
-			topRow[0].image,
-			topRow[1].image,
-			topRow[2].image,
-			topRow[3].image,
-			topRow[4].image
-		);
+		for (let i = 2; i < SYMBOLS.length; i += 5) {
+			midRow.push(SYMBOLS[i]);
+		}
+		for (let i = 3; i < SYMBOLS.length; i += 5) {
+			botRow.push(SYMBOLS[i]);
+		}
+		//? When implimenting another game there should be a check here to make sure the lines for scoring are correct
+		//REFACTOR this is going to thave if checks depending on which lines the player has selected
+		const scoringArray = [];
+		//Color associate with a graphic that lays out the lines visualy for reference
+		//RED
+		scoringArray.push(topRow);
+		scoringArray.push(midRow);
+		scoringArray.push(botRow);
+		// console.log(`FINAL`, topRow, midRow, botRow);
+		//GREEN
+		scoringArray.push([topRow[0], topRow[1], midRow[2], topRow[3], topRow[4]]);
+		scoringArray.push([topRow[0], topRow[1], midRow[2], topRow[3], topRow[4]]);
+		scoringArray.push([midRow[0], midRow[1], botRow[2], midRow[3], midRow[4]]);
+		//BLUE
+		scoringArray.push([botRow[0], botRow[1], midRow[2], botRow[3], botRow[4]]);
+		scoringArray.push([midRow[0], midRow[1], topRow[2], midRow[3], midRow[4]]);
+		//YELLOW
+		scoringArray.push([topRow[0], topRow[1], midRow[2], botRow[3], botRow[4]]);
+		scoringArray.push([botRow[0], botRow[1], midRow[2], topRow[3], topRow[4]]);
+		//CYAN
+		scoringArray.push([botRow[0], midRow[1], topRow[2], midRow[3], botRow[4]]);
+		scoringArray.push([topRow[0], midRow[1], botRow[2], midRow[3], topRow[4]]);
+		//PURPLE
+		scoringArray.push([midRow[0], topRow[1], midRow[2], botRow[3], midRow[4]]);
+		scoringArray.push([midRow[0], botRow[1], midRow[2], topRow[3], midRow[4]]);
+		//FUSHIA
+		scoringArray.push([midRow[0], topRow[1], topRow[2], topRow[3], midRow[4]]);
+		scoringArray.push([midRow[0], botRow[1], botRow[2], botRow[3], midRow[4]]);
+		//ORANGE
+		scoringArray.push([midRow[0], topRow[1], midRow[2], topRow[3], midRow[4]]);
+		scoringArray.push([midRow[0], botRow[1], midRow[2], botRow[3], midRow[4]]);
+		//DARK GREEN
+		scoringArray.push([botRow[0], midRow[1], midRow[2], midRow[3], botRow[4]]);
+		scoringArray.push([topRow[0], midRow[1], midRow[2], midRow[3], topRow[4]]);
+		let winnings = scoringAlgorithm(scoringArray);
+		// alert(`winnings ${winnings}`);
 	}
 
 	// Handler for symbols that go off canvas
@@ -105,71 +137,52 @@ export class Game {
 			//Check if the symbol is off the canvas
 			if (SYMBOLS[i].y > this.canvas.height + SYMBOL_HEIGHT) {
 				//Gets a random number to index by
-				let math = Math.floor(Math.random() * this.MASTER_SYMBOL_LIST.length);
+				let randomNumber = Math.floor(
+					Math.random() * this.MASTER_SYMBOL_LIST.length
+				);
 				//Saves the X value of the old symbol to use in the new one
 				let x = SYMBOLS[i].x;
 				//Overwrites the old symbol with a brand new one using the randomization from the earlier math variable
-				SYMBOLS[i] = new this.MASTER_SYMBOL_LIST[math](
+				SYMBOLS[i] = new this.MASTER_SYMBOL_LIST[randomNumber](
 					canvas,
 					SYMBOLS[i].colIndex,
 					SYMBOLS[i].rowIndex
-					//-200 because that's the offscreen value every symbol should start at
 				);
+
 				//Sets the X and Y coords to what is expected, overwriting and not caring about what they were when the new symbol was made
 				SYMBOLS[i].x = x;
+				//-200 because that's the offscreen value every symbol should start at
 				SYMBOLS[i].y = -200;
 				SYMBOLS[i].canMove = true;
-				//Zach this isn't working with the update to the symbols map, it DOES (sorta) work with the below commented out line.
-				// SYMBOLS_MAP[SYMBOLS[i].colIndex].push(SYMBOLS[i]);
-				// let indexInMap: number;
-				// console.log(`SYMBOLS at ${i}:`, SYMBOLS[i]);
+				//Updates the symbols map to match the SYMBOLS array
 				for (let j = 0; j < Object.values(SYMBOLS_MAP).length; j++) {
 					if (
 						SYMBOLS_MAP[0][j].colIndex === SYMBOLS[i].colIndex &&
 						SYMBOLS_MAP[0][j].rowIndex === SYMBOLS[i].rowIndex
 					) {
 						SYMBOLS_MAP[0][j] = SYMBOLS[i];
-						// console.log(`SYMBOLS MAP MATCHES,`, SYMBOLS_MAP[0][j], SYMBOLS[i]);
-						// console.log(`MAP COLUMN IS ${SYMBOLS_MAP[0][j].colIndex}`);
-						// console.log(`MAIN COLUMN IS ${SYMBOLS[i].colIndex}`);
 					} else if (
 						SYMBOLS_MAP[1][j].colIndex === SYMBOLS[i].colIndex &&
 						SYMBOLS_MAP[1][j].rowIndex === SYMBOLS[i].rowIndex
 					) {
 						SYMBOLS_MAP[1][j] = SYMBOLS[i];
-						// console.log(`SYMBOLS MAP MATCHES,`, SYMBOLS_MAP[1][j], SYMBOLS[i]);
-						// console.log(`MAP COLUMN IS ${SYMBOLS_MAP[1][j].colIndex}`);
-						// console.log(`MAIN COLUMN IS ${SYMBOLS[i].colIndex}`);
 					} else if (
 						SYMBOLS_MAP[2][j].colIndex === SYMBOLS[i].colIndex &&
 						SYMBOLS_MAP[2][j].rowIndex === SYMBOLS[i].rowIndex
 					) {
 						SYMBOLS_MAP[2][j] = SYMBOLS[i];
-						// console.log(`SYMBOLS MAP MATCHES,`, SYMBOLS_MAP[2][j], SYMBOLS[i]);
-						// console.log(`MAP COLUMN IS ${SYMBOLS_MAP[2][j].colIndex}`);
-						// console.log(`MAIN COLUMN IS ${SYMBOLS[i].colIndex}`);
 					} else if (
 						SYMBOLS_MAP[3][j].colIndex === SYMBOLS[i].colIndex &&
 						SYMBOLS_MAP[3][j].rowIndex === SYMBOLS[i].rowIndex
 					) {
 						SYMBOLS_MAP[3][j] = SYMBOLS[i];
-						// console.log(`SYMBOLS MAP MATCHES,`, SYMBOLS_MAP[3][j], SYMBOLS[i]);
-						// console.log(`MAP COLUMN IS ${SYMBOLS_MAP[3][j].colIndex}`);
-						// console.log(`MAIN COLUMN IS ${SYMBOLS[i].colIndex}`);
 					} else if (
 						SYMBOLS_MAP[4][j].colIndex === SYMBOLS[i].colIndex &&
 						SYMBOLS_MAP[4][j].rowIndex === SYMBOLS[i].rowIndex
 					) {
 						SYMBOLS_MAP[4][j] = SYMBOLS[i];
-						// console.log(`SYMBOLS MAP MATCHES,`, SYMBOLS_MAP[4][j], SYMBOLS[i]);
-						// console.log(`MAP COLUMN IS ${SYMBOLS_MAP[4][j].colIndex}`);
-						// console.log(`MAIN COLUMN IS ${SYMBOLS[i].colIndex}`);
 					}
 				}
-
-				// indexInMap = Object.values(SYMBOLS_MAP[j]).indexOf(SYMBOLS[i]);
-				// if (indexInMap) SYMBOLS_MAP[j][indexInMap] = SYMBOLS[i];
-				// console.log(`SYMBOLS_MAP `, SYMBOLS_MAP);
 			}
 		}
 	}
@@ -202,6 +215,7 @@ export class Game {
 		piecesPerCol: number
 	) {
 		//Rows assigned here
+		let symbolCounter = 0;
 		for (let i = 0; i < piecesPerRow; i++) {
 			//Columns assigned here
 			for (let j = 0; j < piecesPerCol; j++) {
@@ -209,9 +223,19 @@ export class Game {
 				let math = Math.floor(Math.random() * this.MASTER_SYMBOL_LIST.length);
 				//REFACTOR add this to a variable and make this also push to the map array here instead of the function at the bottom, need to initalize the map with 2d arrays
 				SYMBOLS.push(new this.MASTER_SYMBOL_LIST[math](canvas, i, j));
-				// console.log(SYMBOLS);
+				this.createFinalLocation(
+					SYMBOLS[symbolCounter].x,
+					SYMBOLS[symbolCounter].y,
+					i,
+					j
+				);
+				symbolCounter++;
 			}
 		}
+	}
+
+	createFinalLocation(x: number, y: number, row: number, column: number) {
+		FINAL_LOCATIONS_MAP[row][column] = { x, y };
 	}
 
 	makeMap() {

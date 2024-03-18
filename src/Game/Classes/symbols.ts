@@ -23,6 +23,7 @@ export class Symbols {
 	}
 	//This is going to pause when any state except for spinning is enabled as there's no need for it in any other state (I think...)
 	update(context: CanvasRenderingContext2D, speed = 0) {
+		// console.log(`this.y`, this.y, "this.x", this.x);
 		if (this.canMove) this.y += speed;
 
 		// Move the symbol downwards based on its speed
@@ -99,9 +100,3 @@ export class Duchy extends Symbols {
 		this.symbolFrequency = ESymbolFrequency.Duchy;
 	}
 }
-
-//Where pieces should land XY coords
-// (225, 165) (545, 165) (865, 165) (1185, 165) (1505, 165)
-// (225, 481) (545, 481) (865, 481) (1185, 481) (1505, 481)
-// (225, 797) (545, 797) (865, 797) (1185, 797) (1505, 797)
-// (225, 1113) (545, 1113) (865, 1113) (1185, 1113) (1505, 1113)

@@ -109,7 +109,21 @@
 	margin: 2%;
 	transition: all 0.5s;
 }
+.balance-container {
+	padding: 20px;
+}
+.winning-symbol {
+	background-image: url("../public/images/Eyrie\ Leader\ \(Commander\).png");
+}
+.balance-display {
+	background-color: lightslategray;
+	padding: 10px;
+	border-radius: 10px;
+}
 
+.balance-label {
+	font-size: 20px;
+}
 .stopBtn {
 	position: absolute;
 	top: 50%;
@@ -127,7 +141,10 @@
 #alliance,
 #corvid,
 #eyrie,
-#duchy {
+#duchy,
+#cat-winner,
+#otter-winner,
+#alliance-winner {
 	display: none;
 }
 
@@ -138,15 +155,18 @@ body {
 .bottom-container {
 	position: absolute;
 	z-index: 2;
-	bottom: 5%;
+	bottom: 0px;
+	padding: 10px;
+	border-radius: 15px;
 	width: 80vw;
-	height: 40px;
-	left: 50vw;
+	height: 100px;
+	left: 50%;
 	transform: translate(-50%, -50%);
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
+	background: lightgray;
 }
 
 @font-face {
