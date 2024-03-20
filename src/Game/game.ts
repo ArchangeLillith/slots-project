@@ -3,6 +3,7 @@ import { Symbols } from "./Classes/symbols.ts";
 import { FINAL_LOCATIONS_MAP, FinalLocation } from "./Utils/Types.ts";
 import InputHandler from "./input.js";
 import scoringAlgorithm from "./Utils/scoring.ts";
+import * as TWEEN from "@tweenjs/tween.js";
 
 //Global definitions
 let SYMBOLS: Symbols[] = [];
@@ -39,7 +40,7 @@ export class Game {
 	update(context: any, state: string) {
 		//Pulls bottom row to the top for the object pooling
 		this.handleOffscreenSymbols(context);
-
+		//* we can put the tween here in our update loop
 		//Applies speed to the symbols if the check passes
 		if (
 			state === EGameStates.SpinningState ||
@@ -74,7 +75,8 @@ export class Game {
 		});
 		//? This will need to change if the game mode changes, or perhaps there's a better way to do this
 		if (column === 4) {
-			this.grabFinalSymbols();
+			let winnings = this.grabFinalSymbols();
+			return winnings;
 		}
 	}
 
@@ -127,7 +129,8 @@ export class Game {
 		scoringArray.push([botRow[0], midRow[1], midRow[2], midRow[3], botRow[4]]);
 		scoringArray.push([topRow[0], midRow[1], midRow[2], midRow[3], topRow[4]]);
 		let winnings = scoringAlgorithm(scoringArray);
-		// alert(`winnings ${winnings}`);
+		console.log(`winnings ${winnings}`);
+		return winnings;
 	}
 
 	// Handler for symbols that go off canvas

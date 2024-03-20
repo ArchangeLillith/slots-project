@@ -27,6 +27,9 @@ function changeImage(array: any, j: number) {
 	const allianceWinner = document.getElementById("alliance-winner");
 	const otterWinner = document.getElementById("otter-winner");
 	const catWinner = document.getElementById("cat-winner");
+	const duchyWinner = document.getElementById("duchy-winner");
+	const eyrieWinner = document.getElementById("eyrie-winner");
+	const corvidWinner = document.getElementById("corvid-winner");
 	for (let i = 0; i <= j; i++) {
 		switch (array[i].symbolName) {
 			case "alliance":
@@ -37,6 +40,15 @@ function changeImage(array: any, j: number) {
 				break;
 			case "cat":
 				array[i].image = catWinner;
+				break;
+			case "corvid":
+				array[i].image = corvidWinner;
+				break;
+			case "duchy":
+				array[i].image = duchyWinner;
+				break;
+			case "eyrie":
+				array[i].image = eyrieWinner;
 				break;
 		}
 	}

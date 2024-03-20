@@ -5,6 +5,7 @@ import { drawStatusText } from "./Game/Utils/drawOnCanvas.ts";
 import { EGameStates } from "./Game/Utils/Enum.ts";
 import { masterArrayMaker } from "./Game/Utils/masterMaker.ts";
 import ReelBorders from "./Components/reel-borders.tsx";
+import * as TWEEN from "@tweenjs/tween.js";
 
 const App: React.FC = () => {
 	// console.log(`RELOADED APP`);
@@ -14,10 +15,18 @@ const App: React.FC = () => {
 	const CTX = useRef<CanvasRenderingContext2D | null>(null);
 	const GAME = useRef<any>(null);
 	const animationScheduled = useRef<boolean>(false);
-	let DOLLAR_BALANCE: number = 30;
-	let COIN_BALANCE: number = 0;
-	let COINS_PER_LINE: number = 0.05;
-	let WINNINGS: number = 0;
+	const [dollarBalance, setDollarBalance] = React.useState(30);
+	const [coinBalance, setCoinBalance] = React.useState(0);
+	const [coinsPerLine, setCoinsPerLine] = React.useState(5);
+	const [smallJackpot, setSmallJackpot] = React.useState(2000);
+	const [largeJackpot, setLargeJackpot] = React.useState(500);
+	const [winnings, setWinnings] = React.useState();
+
+	let LINES_IN_PLAY: number = 5;
+	let WAGER: number = (coinsPerLine / 100) * LINES_IN_PLAY;
+	let initialBalance = { dollarBalance, coinBalance };
+	// Create a tween for position first
+	var tween = new TWEEN.Tween(initialBalance);
 
 	useEffect(() => {
 		setUp();
@@ -46,6 +55,8 @@ const App: React.FC = () => {
 				STATE = EGameStates.IdleState;
 				//Initiialize the pieces into the array and onto the canvas
 				GAME.current.initialize();
+				//Start the TWEEN so we can have nice animations on our values
+				// tween.start();
 				//Start the animation loop
 				animate();
 			}
@@ -79,8 +90,21 @@ const App: React.FC = () => {
 		}
 	};
 
+	function increaseCoinsPerLine() {
+		setCoinsPerLine(coinsPerLine + 5);
+	}
+	function decreaseCoinsPerLine() {
+		setCoinsPerLine(coinsPerLine - 5);
+	}
+
 	const spinButtonClick = () => {
-		if (GAME.current && STATE !== EGameStates.SpinningState) {
+		//Zach I can make this work but you'll do it cleaner and in a better way halp
+		//Make sure we have a game to latch onto, and that the state is idle as the player shouldn't be able to do any of this if it's in any other state
+		if (GAME.current && STATE === EGameStates.IdleState) {
+			setDollarBalance(dollarBalance - (coinsPerLine / 100) * LINES_IN_PLAY);
+			//zach here we need to figure out how to minus the dollars and coins from the total using set states
+			tween.to({ dollarBalance, coinBalance });
+			// console.log(`money`, dollarBalance + "." + coinBalance);
 			STATE = EGameStates.SpinningState;
 			//Call to the game file to start the spin
 			GAME.current.spin(0);
@@ -110,12 +134,16 @@ const App: React.FC = () => {
 					GAME.current.stopSpin(3);
 				}, 1500);
 				setTimeout(() => {
-					GAME.current.stopSpin(4);
+					const returnedWinnings = GAME.current.stopSpin(4);
+					setWinnings(returnedWinnings);
+					//Zach how do I split the winnings into dollar and coin amounts here to add to the dollar/coin states to display?
 					STATE = EGameStates.IdleState;
 				}, 2000);
 				//Manually reset the state
 			}, 2000);
 		}
+		setLargeJackpot(smallJackpot + 0.05);
+		setLargeJackpot(largeJackpot + 0.1);
 	};
 
 	return (
@@ -123,43 +151,79 @@ const App: React.FC = () => {
 			<div className="jackpot-container">
 				<div className="jackpot-right">
 					<p>JACKPOT</p>
-					<p>$50,000</p>
+					<p>${smallJackpot}</p>
 				</div>
 				<div className="jackpot-left">
 					<p>JACKPOT</p>
-					<p>$30,000</p>
+					<p>${largeJackpot}</p>
 				</div>
 			</div>
 			<div className="bottom-container">
 				<div className="balance-container">
 					<p className="balance-label">Balance</p>
-					{COIN_BALANCE.toString().length === 1 && (
+					{coinBalance.toString().length === 1 && (
 						<p className="balance-display">
-							${DOLLAR_BALANCE}.{COIN_BALANCE}0
+							${dollarBalance}.{coinBalance}0
 						</p>
 					)}
-					{COIN_BALANCE.toString().length !== 1 && (
+					{coinBalance.toString().length !== 1 && (
 						<p className="balance-display">
-							${DOLLAR_BALANCE}.{COIN_BALANCE}
+							${dollarBalance}.{coinBalance}
 						</p>
 					)}
 				</div>
 				<div className="coins-per-line-container">
 					<p className="coins-per-line-label">Coins per line</p>
-					<p className="coins-per-line-display">${COINS_PER_LINE}</p>
+					<div className="coins-container">
+						<button className="coins-btn" onClick={increaseCoinsPerLine}>
+							+
+						</button>{" "}
+						{coinsPerLine.toString().length === 3 && (
+							<p>
+								${coinsPerLine.toString()[0]}.{coinsPerLine.toString()[1]}
+								{coinsPerLine.toString()[2]}
+							</p>
+						)}
+						{coinsPerLine < 99 && coinsPerLine === 1.0 && (
+							<p>${coinsPerLine}</p>
+						)}
+						{coinsPerLine < 99 && coinsPerLine.toString().length === 2 && (
+							<p>$0.{coinsPerLine}</p>
+						)}
+						{coinsPerLine < 99 && coinsPerLine.toString().length === 1 && (
+							<p>$0.0{coinsPerLine}</p>
+						)}
+						<button className="coins-btn" onClick={decreaseCoinsPerLine}>
+							-
+						</button>
+					</div>
+				</div>
+				<div className="spin-btn">
+					<button id="spinBtn" className="spinBtn" onClick={spinButtonClick}>
+						Spin~
+					</button>
 				</div>
 
-				<button id="spinBtn" className="spinBtn" onClick={spinButtonClick}>
-					Spin~
-				</button>
 				<div className="wager-container">
 					<p className="wager-label">Wager</p>
-					{/* Change this to lines-selected eventually */}
-					<p className="wager-display">${COINS_PER_LINE * 1}</p>
+					{/* <p>{WAGER}</p> */}
+					{/* Handling the different lengths of wager and ensuring formatting looks good */}
+					{WAGER > 0.99 && WAGER.toString().length === 5 && <p>${WAGER}</p>}
+					{WAGER > 10.0 && WAGER.toString().length === 4 && <p>${WAGER}0</p>}
+					{WAGER > 0.99 && WAGER < 10.0 && WAGER.toString().length === 4 && (
+						<p>${WAGER}</p>
+					)}
+					{WAGER > 0.99 && WAGER.toString().length === 3 && <p>${WAGER}0</p>}
+					{WAGER > 0.99 && WAGER.toString().length === 2 && <p>${WAGER}.00</p>}
+					{WAGER > 0.99 && WAGER.toString().length === 1 && <p>${WAGER}.00</p>}
+					{WAGER < 0.99 && WAGER.toString().length === 2 && <p>${WAGER}0</p>}
+					{WAGER < 0.99 && WAGER.toString().length === 3 && <p>${WAGER}0</p>}
+					{WAGER < 0.99 && WAGER.toString().length === 4 && <p>${WAGER}</p>}
 				</div>
 
 				<p className="winnings-label">Winnings</p>
-				<p className="winnings-display">${WINNINGS}</p>
+				{winnings && <p className="winnings-display">${winnings}</p>}
+				{!winnings && <p className="winnings-display">$ - - -</p>}
 			</div>
 			<div className="canvas-container">
 				<div className="reel-border-container">
@@ -181,6 +245,13 @@ const App: React.FC = () => {
 				alt="alliance-winner preload"
 			/>
 			<img id="cat-winner" src="images/cat-winner.png" alt="cat preload" />
+			<img id="duchy-winner" src="images/duchy-winner.png" alt="cat preload" />
+			<img id="eyrie-winner" src="images/eyrie-winner.png" alt="cat preload" />
+			<img
+				id="corvid-winner"
+				src="images/corvid-winner.png"
+				alt="corvid preload"
+			/>
 			<img id="corvid" src="images/Corvid-Warrior.png" alt="corvid preload" />
 			<img id="eyrie" src="images/Eyrie-Warrior.png" alt="eyrie preload" />
 			<img id="duchy" src="images/Duchy-Warrior.png" alt="duchy preload" />

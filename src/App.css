@@ -103,7 +103,7 @@
 	transform: translate(-50%, -50%);
 	width: 150px;
 	height: 40px;
-	background-color: lightskyblue;
+	background-color: rgb(178, 190, 255);
 	border: none;
 	border-radius: 3px;
 	margin: 2%;
@@ -116,7 +116,7 @@
 	background-image: url("../public/images/Eyrie\ Leader\ \(Commander\).png");
 }
 .balance-display {
-	background-color: lightslategray;
+	background-color: rgb(178, 190, 255);
 	padding: 10px;
 	border-radius: 10px;
 }
@@ -144,7 +144,10 @@
 #duchy,
 #cat-winner,
 #otter-winner,
-#alliance-winner {
+#alliance-winner,
+#duchy-winner,
+#corvid-winner,
+#eyrie-winner {
 	display: none;
 }
 
@@ -173,4 +176,30 @@ body {
 	font-family: "Root";
 	src: local("Luminari-Regular"),
 		url(../public/Luminari-Regular.ttf) format("truetype");
+}
+
+.coins-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+	margin-top: -15%;
+}
+
+.spin-btn {
+	margin-top: 5%;
+	margin-left: 10%;
+}
+
+.coins-per-line-container {
+	margin-top: 1%;
+}
+
+.coins-btn {
+	background-color: rgb(178, 190, 255);
+	width: 20%;
+	height: 20%;
+	margin: 5%;
+	border: 1px solid white;
+	border-radius: 5px;
 }
