@@ -137,7 +137,25 @@ Keep in mind, what problems are we solving?
         *
     }
 
-<!-- SIDE GAME STUFF -->
+<!-- Math behind the slots and choices for the two ways we could run this -->
+
+## Math on the reels~
+
+<a href="https://docs.google.com/spreadsheets/d/10H2LKh-HEUo4B-RwomgVCFnkDddrEigxqHOL4-jcXV4/edit?usp=sharing">Math doc</a>
+
+- Current setup
+
+  - The reels are pulled psuedo randomly from a list of 100 symbols as determined by the object controlling their appear rate
+
+- Pros:
+  - No refactor needed
+  - No time devoted to math that doesn't serve a greater purpose in my learning journey (albeit interesting)
+  - Doesn't require static wheels so therefore can have more flexibility for the user
+- Cons:
+
+  - Perhaps not as consistent with payouts. The psuedo randomness isn't as controlled - No math out there that I've found to back this up (not that there is much math on this topic...)
+
+  <!-- SIDE GAME STUFF -->
 
 ## Side Game Stuff
 
