@@ -220,9 +220,11 @@ https://docs.google.com/spreadsheets/d/1beGMKgDcoQguu8ZhHphPO5DLq48bAbk-vfuTty1X
 -Basic probabaility 
 https://www.mathsisfun.com/data/probability-events-independent.html
 
-- Par sheet example
+- PAR sheet example
 https://easy.vegas/games/slots/par_sheets/In-the-Money.gif
 
+-University paper on PAR sheets
+-https://www.nh.gov/gsc/calendar/documents/20091117_harrigan_dixon.pdf
 
 -Psychology of slots and gambling
 https://youtube.com/watch?v=Fpj43qwSmtg&feature=shares
