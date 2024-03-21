@@ -15,16 +15,14 @@ const App: React.FC = () => {
 	const CTX = useRef<CanvasRenderingContext2D | null>(null);
 	const GAME = useRef<any>(null);
 	const animationScheduled = useRef<boolean>(false);
-	const [dollarBalance, setDollarBalance] = React.useState(30);
-	const [coinBalance, setCoinBalance] = React.useState(0);
+	const [balance, setBalance] = React.useState(30);
 	const [coinsPerLine, setCoinsPerLine] = React.useState(5);
-	const [smallJackpot, setSmallJackpot] = React.useState(2000);
-	const [largeJackpot, setLargeJackpot] = React.useState(500);
-	const [winnings, setWinnings] = React.useState();
-
+	const [smallJackpot, setSmallJackpot] = React.useState(500);
+	const [largeJackpot, setLargeJackpot] = React.useState(2000);
+	const [winnings, setWinnings] = React.useState(-1);
 	let LINES_IN_PLAY: number = 5;
 	let WAGER: number = (coinsPerLine / 100) * LINES_IN_PLAY;
-	let initialBalance = { dollarBalance, coinBalance };
+	let initialBalance = { balance };
 	// Create a tween for position first
 	var tween = new TWEEN.Tween(initialBalance);
 
@@ -97,15 +95,24 @@ const App: React.FC = () => {
 		setCoinsPerLine(coinsPerLine - 5);
 	}
 
+	function formatCurrency(x: number) {
+		return x.toFixed(2);
+	}
+
 	const spinButtonClick = () => {
-		//Zach I can make this work but you'll do it cleaner and in a better way halp
 		//Make sure we have a game to latch onto, and that the state is idle as the player shouldn't be able to do any of this if it's in any other state
 		if (GAME.current && STATE === EGameStates.IdleState) {
-			setDollarBalance(dollarBalance - (coinsPerLine / 100) * LINES_IN_PLAY);
-			//zach here we need to figure out how to minus the dollars and coins from the total using set states
-			tween.to({ dollarBalance, coinBalance });
-			// console.log(`money`, dollarBalance + "." + coinBalance);
+			//Resets the winnings to ensure nothing gets cross added accidentally
+			setWinnings(0);
+			//Subtracts the amoutn of the wager from the balance
+			setBalance(
+				parseFloat(
+					formatCurrency(balance - (coinsPerLine / 100) * LINES_IN_PLAY)
+				)
+			);
+			tween.to({ balance });
 			STATE = EGameStates.SpinningState;
+
 			//Call to the game file to start the spin
 			GAME.current.spin(0);
 			setTimeout(() => {
@@ -136,13 +143,14 @@ const App: React.FC = () => {
 				setTimeout(() => {
 					const returnedWinnings = GAME.current.stopSpin(4);
 					setWinnings(returnedWinnings);
-					//Zach how do I split the winnings into dollar and coin amounts here to add to the dollar/coin states to display?
 					STATE = EGameStates.IdleState;
+					setBalance(balance + returnedWinnings);
 				}, 2000);
 				//Manually reset the state
 			}, 2000);
 		}
-		setLargeJackpot(smallJackpot + 0.05);
+
+		setSmallJackpot(smallJackpot + 0.05);
 		setLargeJackpot(largeJackpot + 0.1);
 	};
 
@@ -151,33 +159,25 @@ const App: React.FC = () => {
 			<div className="jackpot-container">
 				<div className="jackpot-right">
 					<p>JACKPOT</p>
-					<p>${smallJackpot}</p>
+					<p>${smallJackpot.toFixed(2)}</p>
 				</div>
 				<div className="jackpot-left">
 					<p>JACKPOT</p>
-					<p>${largeJackpot}</p>
+					<p>${largeJackpot.toFixed(2)}</p>
 				</div>
 			</div>
 			<div className="bottom-container">
 				<div className="balance-container">
 					<p className="balance-label">Balance</p>
-					{coinBalance.toString().length === 1 && (
-						<p className="balance-display">
-							${dollarBalance}.{coinBalance}0
-						</p>
-					)}
-					{coinBalance.toString().length !== 1 && (
-						<p className="balance-display">
-							${dollarBalance}.{coinBalance}
-						</p>
-					)}
+
+					<p className="balance-display">${balance.toFixed(2)}</p>
 				</div>
 				<div className="coins-per-line-container">
 					<p className="coins-per-line-label">Coins per line</p>
 					<div className="coins-container">
 						<button className="coins-btn" onClick={increaseCoinsPerLine}>
 							+
-						</button>{" "}
+						</button>
 						{coinsPerLine.toString().length === 3 && (
 							<p>
 								${coinsPerLine.toString()[0]}.{coinsPerLine.toString()[1]}
@@ -206,30 +206,20 @@ const App: React.FC = () => {
 
 				<div className="wager-container">
 					<p className="wager-label">Wager</p>
-					{/* <p>{WAGER}</p> */}
-					{/* Handling the different lengths of wager and ensuring formatting looks good */}
-					{WAGER > 0.99 && WAGER.toString().length === 5 && <p>${WAGER}</p>}
-					{WAGER > 10.0 && WAGER.toString().length === 4 && <p>${WAGER}0</p>}
-					{WAGER > 0.99 && WAGER < 10.0 && WAGER.toString().length === 4 && (
-						<p>${WAGER}</p>
-					)}
-					{WAGER > 0.99 && WAGER.toString().length === 3 && <p>${WAGER}0</p>}
-					{WAGER > 0.99 && WAGER.toString().length === 2 && <p>${WAGER}.00</p>}
-					{WAGER > 0.99 && WAGER.toString().length === 1 && <p>${WAGER}.00</p>}
-					{WAGER < 0.99 && WAGER.toString().length === 2 && <p>${WAGER}0</p>}
-					{WAGER < 0.99 && WAGER.toString().length === 3 && <p>${WAGER}0</p>}
-					{WAGER < 0.99 && WAGER.toString().length === 4 && <p>${WAGER}</p>}
+					<p>${WAGER.toFixed(2)}</p>
 				</div>
 
 				<p className="winnings-label">Winnings</p>
-				{winnings && <p className="winnings-display">${winnings}</p>}
-				{!winnings && <p className="winnings-display">$ - - -</p>}
+				{winnings !== -1 && (
+					<p className="winnings-display">${winnings.toFixed(2)}</p>
+				)}
+				{winnings === -1 && <p className="winnings-display">$ - - -</p>}
 			</div>
 			<div className="canvas-container">
 				<div className="reel-border-container">
 					<ReelBorders></ReelBorders>
 				</div>
-				<img src="images/border.png" alt="border" className="border"></img>
+				{/* <img src="images/border.png" alt="border" className="border"></img> */}
 				<canvas id="canvas1" ref={CANVAS}></canvas>
 			</div>
 			<img id="otter" src="images/Riverfolk-Warrior.png" alt="otter preload" />
@@ -263,7 +253,5 @@ const App: React.FC = () => {
 		</div>
 	);
 };
-
-//Put here to ensure it doesn't get reinitialized when the component renders again
 
 export default App;

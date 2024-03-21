@@ -1,13 +1,19 @@
 #canvas1 {
-	background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-		url("/public/images/Background.jpg");
+	background: linear-gradient(rgba(99, 79, 43, 0.414), rgba(61, 33, 8, 0.643)),
+		url("../public/images/Background.jpg");
 	width: 100%;
 	height: 100%;
 	border-radius: 20px;
 }
+body {
+	background: url("../public/images/root-background.png");
+}
 
 * {
 	font-family: "Root";
+	--mainColor: rgb(229, 179, 86);
+	--darkColor: rgb(183, 126, 21);
+	--secondaryColor: rgb(170, 104, 42);
 }
 .canvas-container {
 	width: 80vw;
@@ -37,7 +43,7 @@
 .jackpot-left > p {
 	margin-bottom: -25%;
 	margin-top: -5%;
-	color: lightslategray;
+	color: orange;
 	font-size: 40px;
 	margin-left: 30px;
 }
@@ -46,9 +52,9 @@
 	background: rgb(177, 150, 74);
 	position: absolute;
 	width: 10px;
-	height: 74vh;
+	height: 70vh;
 	z-index: 4;
-	top: 9.5%;
+	top: 11%;
 }
 
 .reel-border-one {
@@ -103,20 +109,23 @@
 	transform: translate(-50%, -50%);
 	width: 150px;
 	height: 40px;
-	background-color: rgb(178, 190, 255);
+	background-color: var(--mainColor);
 	border: none;
 	border-radius: 3px;
 	margin: 2%;
 	transition: all 0.5s;
 }
+
 .balance-container {
 	padding: 20px;
 }
+
 .winning-symbol {
 	background-image: url("../public/images/Eyrie\ Leader\ \(Commander\).png");
 }
+
 .balance-display {
-	background-color: rgb(178, 190, 255);
+	background-color: var(--mainColor);
 	padding: 10px;
 	border-radius: 10px;
 }
@@ -124,6 +133,7 @@
 .balance-label {
 	font-size: 20px;
 }
+
 .stopBtn {
 	position: absolute;
 	top: 50%;
@@ -133,22 +143,8 @@
 
 .spinBtn:hover,
 .stopBtn:hover {
-	background-color: darkblue;
-	color: white;
-}
-#otter,
-#cat,
-#alliance,
-#corvid,
-#eyrie,
-#duchy,
-#cat-winner,
-#otter-winner,
-#alliance-winner,
-#duchy-winner,
-#corvid-winner,
-#eyrie-winner {
-	display: none;
+	background-color: var(--darkColor);
+	color: whitesmoke;
 }
 
 body {
@@ -169,13 +165,7 @@ body {
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
-	background: lightgray;
-}
-
-@font-face {
-	font-family: "Root";
-	src: local("Luminari-Regular"),
-		url(../public/Luminari-Regular.ttf) format("truetype");
+	background: rgb(233, 206, 153);
 }
 
 .coins-container {
@@ -196,10 +186,31 @@ body {
 }
 
 .coins-btn {
-	background-color: rgb(178, 190, 255);
+	background-color: var(--mainColor);
 	width: 20%;
 	height: 20%;
 	margin: 5%;
-	border: 1px solid white;
+	border: none;
 	border-radius: 5px;
+}
+
+#otter,
+#cat,
+#alliance,
+#corvid,
+#eyrie,
+#duchy,
+#cat-winner,
+#otter-winner,
+#alliance-winner,
+#duchy-winner,
+#corvid-winner,
+#eyrie-winner {
+	display: none;
+}
+
+@font-face {
+	font-family: "Root";
+	src: local("Luminari-Regular"),
+		url(../public/Luminari-Regular.ttf) format("truetype");
 }
