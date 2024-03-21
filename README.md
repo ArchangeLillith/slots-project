@@ -217,6 +217,13 @@ https://www.youtube.com/watch?v=JyIWQIdxaOA
 -Slots calculator from above vid, excel spreadsheet to calculate winning probs
 https://docs.google.com/spreadsheets/d/1beGMKgDcoQguu8ZhHphPO5DLq48bAbk-vfuTty1X0pg/edit#gid=605918202
 
+-Basic probabaility 
+https://www.mathsisfun.com/data/probability-events-independent.html
+
+- Par sheet example
+https://easy.vegas/games/slots/par_sheets/In-the-Money.gif
+
+
 -Psychology of slots and gambling
 https://youtube.com/watch?v=Fpj43qwSmtg&feature=shares
 
@@ -241,8 +248,7 @@ https://boardgamegeek.com/thread/2252658/share-your-assets-templates-variants
 -Picture for some factions png blank background source
 https://owenmcg.com/games/2020/01/22/root.html
 
--Probabaility 
-https://www.mathsisfun.com/data/probability-events-independent.html
+
 
 -Use the logic from this in the logic for the clicking into place, and perhaps in the way each tile on the board is referred to
 
