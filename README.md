@@ -35,6 +35,7 @@ This will be a space to lay out the logistics while I'm working on this project
 ## Term Clarification
 
 <br> -Symbols are the tiles on the reels of the slots</br>
+<br> -Scatter symbols are symbols that are not regular symbols and can win even if they don't match the lines in play, see page 5 second bullet point in the Harrigan & Dixon paper</br>
 <br> -Items are the bonus items dropped by the ruins, and are 'collected' on the side of the machine.</br>
 <br> -Sticky Wilds: the symbol lands and 'sticks' in that spot. When the slot is rolled again, it moved vertically one space down and if it moves off the board is gone.</br>
 <br> -Prime spins are discounted spins</br>
@@ -138,6 +139,27 @@ Keep in mind, what problems are we solving?
     }
 
 <!-- Math behind the slots and choices for the two ways we could run this -->
+## PAR Sheet study
+
+-University paper on PAR sheets
+-https://www.nh.gov/gsc/calendar/documents/20091117_harrigan_dixon.pdf
+Things learned from this paper:
+  - Scatter rewards saw for 25% of the wins on one version of one of the studied machines
+  - Different versions of the same game can very payback by over 10%, but look the same to the player
+  - As the hit frequency (the amount of times one wins) went up (a very small amount, like .1) so did the payback rate. There's coorelation there. Win more, get more payback.
+  - Max jackpot can only be won with max bet on a winning line
+  - ``"Jackpot amount" is the amount of the highest prize. On the mechanical reel slots,
+there is a bonus for wagering the maximum number of credits. For example, on
+The Phantom of the Opera, a wager of one credit pays a bonus of 1,000 credits,
+two credits pays 2,000, and three credits pays 5,000. The amount of the jackpot
+for both video slots games is linear in that the jackpot is 10,000 times the credits
+wagered and thus varies from 10,000 to 50,000, as the wager can vary from one to
+five credits. " Page 6, top bullet``
+  - Larger payback games can be played longer than the ones with lower paybacks (logic)
+  - Classical and operant conditioning are present in slot machines
+  - A seasoned gambler to slots is expected to be mentally arounsed before they've even touched the machine
+  - Any amount of money is a "win" even if the gambler looses money on the spin (bets 50c but gets back less than the wager)
+  - Bonus games increase arousal and can lead to conditioning
 
 ## Math on the reels~
 
@@ -166,6 +188,13 @@ Keep in mind, what problems are we solving?
 - Use of the board, maybe winter/autumn themes? \* What would this change?
 - Sticky wilds, image to complete
 <!-- FILE STRUCTURE -->
+## Psychology ramblings 
+
+-  https://www.youtube.com/watch?v=Fpj43qwSmtg&ab_channel=SciShowPsych
+- Talks about reward schedules
+- More varied rewards, more hooked people ar going to be
+- Persistance is what makes the reward happen
+- TAKEAWAY: we should make a timer for the first payout to be a bit bigger perhaps? 
 
 ## Files needed
 
@@ -223,8 +252,15 @@ https://www.mathsisfun.com/data/probability-events-independent.html
 - PAR sheet example
 https://easy.vegas/games/slots/par_sheets/In-the-Money.gif
 
+- Behind the
+
 -University paper on PAR sheets
--https://www.nh.gov/gsc/calendar/documents/20091117_harrigan_dixon.pdf
+https://www.nh.gov/gsc/calendar/documents/20091117_harrigan_dixon.pdf
+
+-Opernant Conditioning
+https://www.youtube.com/watch?v=ne6o-uPJarA&ab_channel=Sprouts
+https://www.youtube.com/watch?v=3xNggCrTWUo&ab_channel=ProfessorRoss
+- Rewards every time get boring, or even on intervals
 
 -Psychology of slots and gambling
 https://youtube.com/watch?v=Fpj43qwSmtg&feature=shares
