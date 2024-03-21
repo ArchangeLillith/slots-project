@@ -238,6 +238,9 @@ https://boardgamegeek.com/thread/2252658/share-your-assets-templates-variants
 -Picture for some factions png blank background source
 https://owenmcg.com/games/2020/01/22/root.html
 
+-Probabaility 
+https://www.mathsisfun.com/data/probability-events-independent.html
+
 -Use the logic from this in the logic for the clicking into place, and perhaps in the way each tile on the board is referred to
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
