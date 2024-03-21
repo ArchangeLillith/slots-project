@@ -155,7 +155,7 @@ Keep in mind, what problems are we solving?
 
   - Perhaps not as consistent with payouts. The psuedo randomness isn't as controlled - No math out there that I've found to back this up (not that there is much math on this topic...)
 
-<img href="../public//Top-start.png" />
+<img href="Top-start.png" />
 <img href="../public/Middle-start.png" />
 <img href="../public/Bottom-start.png" />
   <!-- SIDE GAME STUFF -->
