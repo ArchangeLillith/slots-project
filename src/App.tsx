@@ -112,9 +112,9 @@ const App: React.FC = () => {
 				)
 			);
 			tween.to({ balance });
-			//* Test script interrupt here
-			runTestSpins(GAME.current);
-			return;
+			// //* Test script interrupt here
+			// runTestSpins(GAME.current);
+			// return;
 			STATE = EGameStates.SpinningState;
 			//Call to the game file to start the spin
 			GAME.current.spin(0);
