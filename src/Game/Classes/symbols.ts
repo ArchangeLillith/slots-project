@@ -1,4 +1,4 @@
-import { ESymbolFrequency } from "../Utils/Enum";
+import { ESymbolFrequency90, ESymbolValues75 } from "../Utils/Enum";
 
 export class Symbols {
 	height: number;
@@ -41,62 +41,74 @@ export class Symbols {
 export class Otter extends Symbols {
 	symbolName: string;
 	symbolFrequency: number;
+	value: number;
 	constructor(canvas: HTMLCanvasElement, rowIndex: number, colIndex: number) {
 		super(canvas, rowIndex, colIndex);
 		//Zach how about the typing here?
 		this.image = document.getElementById("otter") as CanvasImageSource;
 		this.symbolName = "otter";
-		this.symbolFrequency = ESymbolFrequency.Otter;
+		this.symbolFrequency = ESymbolFrequency90.Otter;
+		this.value = ESymbolValues75.Otter;
 	}
 }
 
 export class Eyrie extends Symbols {
 	symbolName: string;
 	symbolFrequency: number;
+	value: number;
 	constructor(canvas: HTMLCanvasElement, rowIndex: number, colIndex: number) {
 		super(canvas, rowIndex, colIndex);
 		this.image = document.getElementById("eyrie") as CanvasImageSource;
 		this.symbolName = "eyrie";
-		this.symbolFrequency = ESymbolFrequency.Eyrie;
+		this.symbolFrequency = ESymbolFrequency90.Eyrie;
+		this.value = ESymbolValues75.Eyrie;
 	}
 }
 export class Cat extends Symbols {
 	symbolName: string;
 	symbolFrequency: number;
+	value: number;
 	constructor(canvas: HTMLCanvasElement, rowIndex: number, colIndex: number) {
 		super(canvas, rowIndex, colIndex);
 		this.image = document.getElementById("cat") as CanvasImageSource;
 		this.symbolName = "cat";
-		this.symbolFrequency = ESymbolFrequency.Cat;
+		this.symbolFrequency = ESymbolFrequency90.Cat;
+		this.value = ESymbolValues75.Cat;
 	}
 }
 export class Corvid extends Symbols {
 	symbolName: string;
 	symbolFrequency: number;
+	value: number;
 	constructor(canvas: HTMLCanvasElement, rowIndex: number, colIndex: number) {
 		super(canvas, rowIndex, colIndex);
 		this.image = document.getElementById("corvid") as CanvasImageSource;
 		this.symbolName = "corvid";
-		this.symbolFrequency = ESymbolFrequency.Corvid;
+		this.symbolFrequency = ESymbolFrequency90.Corvid;
+		this.value = ESymbolValues75.Corvid;
 	}
 }
 export class Alliance extends Symbols {
 	symbolName: string;
 	symbolFrequency: number;
+	value: number;
 	constructor(canvas: HTMLCanvasElement, rowIndex: number, colIndex: number) {
 		super(canvas, rowIndex, colIndex);
 		this.image = document.getElementById("alliance") as CanvasImageSource;
 		this.symbolName = "alliance";
-		this.symbolFrequency = ESymbolFrequency.Alliance;
+		this.symbolFrequency = ESymbolFrequency90.Alliance;
+		this.value = ESymbolValues75.Alliance;
 	}
 }
 export class Duchy extends Symbols {
 	symbolName: string;
 	symbolFrequency: number;
+	value: number;
 	constructor(canvas: HTMLCanvasElement, rowIndex: number, colIndex: number) {
 		super(canvas, rowIndex, colIndex);
 		this.image = document.getElementById("duchy") as CanvasImageSource;
 		this.symbolName = "duchy";
-		this.symbolFrequency = ESymbolFrequency.Duchy;
+		this.symbolFrequency = ESymbolFrequency90.Duchy;
+		this.value = ESymbolValues75.Duchy;
 	}
 }

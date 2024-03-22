@@ -1,4 +1,4 @@
-import { ESymbolFrequency } from "./Enum";
+import { ESymbolFrequency75 } from "./Enum";
 import { Alliance, Cat, Corvid, Duchy, Eyrie, Otter } from "../Classes/symbols";
 
 export function masterArrayMaker() {
@@ -9,22 +9,22 @@ export function masterArrayMaker() {
 	//   for(let j = 0; j < 100 * ESymbolFrequency[symbolsAvaliable[i]; j++){
 	//   MASTER_ARRAY.push("Otter")}
 	// }
-	for (let i = 0; i < 100 * ESymbolFrequency.Otter; i++) {
+	for (let i = 0; i < 100 * ESymbolFrequency75.Otter; i++) {
 		MASTER_ARRAY.push(Otter);
 	}
-	for (let i = 0; i < 100 * ESymbolFrequency.Cat; i++) {
+	for (let i = 0; i < 100 * ESymbolFrequency75.Cat; i++) {
 		MASTER_ARRAY.push(Cat);
 	}
-	for (let i = 0; i < 100 * ESymbolFrequency.Eyrie; i++) {
+	for (let i = 0; i < 100 * ESymbolFrequency75.Eyrie; i++) {
 		MASTER_ARRAY.push(Eyrie);
 	}
-	for (let i = 0; i < 100 * ESymbolFrequency.Corvid; i++) {
+	for (let i = 0; i < 100 * ESymbolFrequency75.Corvid; i++) {
 		MASTER_ARRAY.push(Corvid);
 	}
-	for (let i = 0; i < 100 * ESymbolFrequency.Alliance; i++) {
+	for (let i = 0; i < 100 * ESymbolFrequency75.Alliance; i++) {
 		MASTER_ARRAY.push(Alliance);
 	}
-	for (let i = 0; i < 100 * ESymbolFrequency.Duchy; i++) {
+	for (let i = 0; i < 100 * ESymbolFrequency75.Duchy; i++) {
 		MASTER_ARRAY.push(Duchy);
 	}
 	return MASTER_ARRAY;

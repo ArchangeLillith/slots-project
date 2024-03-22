@@ -64,24 +64,44 @@ export class Game {
 		}
 	}
 
-	stopSpin(column: number) {
-		//Grabs the symbol from the column passed in
-		SYMBOLS_MAP[column].forEach((symbol: Symbols, index: number) => {
-			//Checks to see if it has a row index of i, and if so, sets the final location
-			symbol.y = (FINAL_LOCATIONS_MAP[column] as FinalLocation)[index].y;
-			symbol.x = (FINAL_LOCATIONS_MAP[column] as FinalLocation)[index].x;
+	stopSpin(
+		column: number,
+		TEST_SYMBOLS_MAP: Symbols[][],
+		TEST_SYMBOLS: Symbols[]
+	) {
+		if (!TEST_SYMBOLS_MAP) {
+			//Grabs the symbol from the column passed in
+			SYMBOLS_MAP[column].forEach((symbol: Symbols, index: number) => {
+				//Checks to see if it has a row index of i, and if so, sets the final location
+				symbol.y = (FINAL_LOCATIONS_MAP[column] as FinalLocation)[index].y;
+				symbol.x = (FINAL_LOCATIONS_MAP[column] as FinalLocation)[index].x;
 
-			symbol.canMove = false;
-		});
-		//? This will need to change if the game mode changes, or perhaps there's a better way to do this
-		if (column === 4) {
-			let winnings = this.grabFinalSymbols();
-			return winnings;
+				symbol.canMove = false;
+			});
+			//? This will need to change if the game mode changes, or perhaps there's a better way to do this
+			if (column === 4) {
+				let winnings = this.grabFinalSymbols(SYMBOLS);
+				return winnings;
+			}
+		} else {
+			//* TESTING
+			//Grabs the symbol from the column passed in
+			TEST_SYMBOLS_MAP[column].forEach((symbol: Symbols, index: number) => {
+				//Checks to see if it has a row index of i, and if so, sets the final location
+				symbol.y = (FINAL_LOCATIONS_MAP[column] as FinalLocation)[index].y;
+				symbol.x = (FINAL_LOCATIONS_MAP[column] as FinalLocation)[index].x;
+
+				symbol.canMove = false;
+			});
+			if (column === 4) {
+				let winnings = this.grabFinalSymbols(TEST_SYMBOLS);
+				return winnings;
+			}
 		}
 	}
 
 	//? this will also need to change if the game mode changes
-	grabFinalSymbols() {
+	grabFinalSymbols(SYMBOLS: Symbols[]) {
 		let topRow = [];
 		let midRow = [];
 		let botRow = [];
@@ -194,11 +214,11 @@ export class Game {
 	 *
 	 * @param context - important to the function to know what it's drawing on
 	 */
-	initialize() {
+	initialize(test: boolean) {
 		if (FIRST_TIME) {
 			this.addPieces(this.canvas, 5, 5);
 			this.makeMap();
-			FIRST_TIME = false;
+			if (!test) FIRST_TIME = false;
 		} else return;
 	}
 

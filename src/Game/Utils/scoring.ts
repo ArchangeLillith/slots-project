@@ -7,14 +7,17 @@ export default function scoringAlgorithm(scoringArray: any) {
 			if (array[1].symbolName === array[2].symbolName) {
 				if (array[2].symbolName === array[3].symbolName) {
 					if (array[3].symbolName === array[4].symbolName) {
-						winnings += 5;
+						winnings += array[0].value * 5;
+
 						changeImage(array, 4);
 					} else {
-						winnings += 4;
+						winnings += array[0].value * 4;
+
 						changeImage(array, 3);
 					}
 				} else {
-					winnings += 3;
+					winnings += array[0].value * 3;
+
 					changeImage(array, 2);
 				}
 			}

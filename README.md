@@ -139,27 +139,28 @@ Keep in mind, what problems are we solving?
     }
 
 <!-- Math behind the slots and choices for the two ways we could run this -->
+
 ## PAR Sheet study
 
--University paper on PAR sheets
--https://www.nh.gov/gsc/calendar/documents/20091117_harrigan_dixon.pdf
+-University paper on PAR sheets -https://www.nh.gov/gsc/calendar/documents/20091117_harrigan_dixon.pdf
 Things learned from this paper:
-  - Scatter rewards saw for 25% of the wins on one version of one of the studied machines
-  - Different versions of the same game can very payback by over 10%, but look the same to the player
-  - As the hit frequency (the amount of times one wins) went up (a very small amount, like .1) so did the payback rate. There's coorelation there. Win more, get more payback.
-  - Max jackpot can only be won with max bet on a winning line
-  - ``"Jackpot amount" is the amount of the highest prize. On the mechanical reel slots,
+
+- Scatter rewards saw for 25% of the wins on one version of one of the studied machines
+- Different versions of the same game can very payback by over 10%, but look the same to the player
+- As the hit frequency (the amount of times one wins) went up (a very small amount, like .1) so did the payback rate. There's coorelation there. Win more, get more payback.
+- Max jackpot can only be won with max bet on a winning line
+- `"Jackpot amount" is the amount of the highest prize. On the mechanical reel slots,
 there is a bonus for wagering the maximum number of credits. For example, on
 The Phantom of the Opera, a wager of one credit pays a bonus of 1,000 credits,
 two credits pays 2,000, and three credits pays 5,000. The amount of the jackpot
 for both video slots games is linear in that the jackpot is 10,000 times the credits
 wagered and thus varies from 10,000 to 50,000, as the wager can vary from one to
-five credits. " Page 6, top bullet``
-  - Larger payback games can be played longer than the ones with lower paybacks (logic)
-  - Classical and operant conditioning are present in slot machines
-  - A seasoned gambler to slots is expected to be mentally arounsed before they've even touched the machine
-  - Any amount of money is a "win" even if the gambler looses money on the spin (bets 50c but gets back less than the wager)
-  - Bonus games increase arousal and can lead to conditioning
+five credits. " Page 6, top bullet`
+- Larger payback games can be played longer than the ones with lower paybacks (logic)
+- Classical and operant conditioning are present in slot machines
+- A seasoned gambler to slots is expected to be mentally arounsed before they've even touched the machine
+- Any amount of money is a "win" even if the gambler looses money on the spin (bets 50c but gets back less than the wager)
+- Bonus games increase arousal and can lead to conditioning
 
 ## Math on the reels~
 
@@ -188,13 +189,14 @@ five credits. " Page 6, top bullet``
 - Use of the board, maybe winter/autumn themes? \* What would this change?
 - Sticky wilds, image to complete
 <!-- FILE STRUCTURE -->
-## Psychology ramblings 
 
--  https://www.youtube.com/watch?v=Fpj43qwSmtg&ab_channel=SciShowPsych
+## Psychology ramblings
+
+- https://www.youtube.com/watch?v=Fpj43qwSmtg&ab_channel=SciShowPsych
 - Talks about reward schedules
 - More varied rewards, more hooked people ar going to be
 - Persistance is what makes the reward happen
-- TAKEAWAY: we should make a timer for the first payout to be a bit bigger perhaps? 
+- TAKEAWAY: we should make a timer for the first payout to be a bit bigger perhaps?
 
 ## Files needed
 
@@ -223,15 +225,19 @@ five credits. " Page 6, top bullet``
 
 - For ruins pick me game, when you get an item the first time should it pay out? Or do you just get the item?
   - I imagine it'd be a base for matching ruins and if you get a dupe it gives a small bonus, like 30 base +5 for dupe.
-- How do we structure the if then?
-  - Maybe we could do a generic if then, saying `if (symbol === symbol) then ...`
+  <!-- - How do we structure the if then?
+  - Maybe we could do a generic if then, saying `if (symbol === symbol) then ...` -->
 - For prime spins, do we use a different set of reels?
 - How do we handle symbol rarity?
   - We should do a flat rarity. Easier to handle, easier to build around for symbol distribution. Same with ruins items, but we can impliment a fluxuating rarity if so desire and test to see the feel.
 - For the input methods, how do we handle the clicking?
   - We'll start with all buttons having an onclick, and the state enter will trigger a change in the buttons. For testing, this will remove the buttons with CSS but for production this will grey out buttons that user can't click. After beta testing with potential users, we'll determine if having an invivible button over the screen would contriute to UX
 - For the stats state, how do we manage that?
+
   - I'm thinking we either hold those in /the/ global state, or we could make another global state just for stats so we don't make the main global state so muddy.
+
+- For a professional:
+  -When looking at the percent payback and the total average winnings, how do we balance those? Should the lowest percent symbol always be the highest value, or should I swap it around to ensure the winnings are similar? Will that have an adverse effect on the reward system? As betting more, I'd assume you'd see the "rarer" symbols more frequently...
 
 <!-- RESEARCH -->
 
@@ -246,11 +252,11 @@ https://www.youtube.com/watch?v=JyIWQIdxaOA
 -Slots calculator from above vid, excel spreadsheet to calculate winning probs
 https://docs.google.com/spreadsheets/d/1beGMKgDcoQguu8ZhHphPO5DLq48bAbk-vfuTty1X0pg/edit#gid=605918202
 
--Basic probabaility 
+-Basic probabaility
 https://www.mathsisfun.com/data/probability-events-independent.html
 
 - PAR sheet example
-https://easy.vegas/games/slots/par_sheets/In-the-Money.gif
+  https://easy.vegas/games/slots/par_sheets/In-the-Money.gif
 
 - Behind the
 
@@ -260,6 +266,7 @@ https://www.nh.gov/gsc/calendar/documents/20091117_harrigan_dixon.pdf
 -Opernant Conditioning
 https://www.youtube.com/watch?v=ne6o-uPJarA&ab_channel=Sprouts
 https://www.youtube.com/watch?v=3xNggCrTWUo&ab_channel=ProfessorRoss
+
 - Rewards every time get boring, or even on intervals
 
 -Psychology of slots and gambling
@@ -285,8 +292,6 @@ https://boardgamegeek.com/thread/2252658/share-your-assets-templates-variants
 
 -Picture for some factions png blank background source
 https://owenmcg.com/games/2020/01/22/root.html
-
-
 
 -Use the logic from this in the logic for the clicking into place, and perhaps in the way each tile on the board is referred to
 

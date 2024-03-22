@@ -6,6 +6,7 @@ import { EGameStates } from "./Game/Utils/Enum.ts";
 import { masterArrayMaker } from "./Game/Utils/masterMaker.ts";
 import ReelBorders from "./Components/reel-borders.tsx";
 import * as TWEEN from "@tweenjs/tween.js";
+import runTestSpins from "./game.spec.ts";
 
 const App: React.FC = () => {
 	// console.log(`RELOADED APP`);
@@ -51,8 +52,8 @@ const App: React.FC = () => {
 
 				//Set initial state
 				STATE = EGameStates.IdleState;
-				//Initiialize the pieces into the array and onto the canvas
-				GAME.current.initialize();
+				//Initiialize the pieces into the array and onto the canvas and let it know we're not running a test
+				GAME.current.initialize(false);
 				//Start the TWEEN so we can have nice animations on our values
 				// tween.start();
 				//Start the animation loop
@@ -111,8 +112,10 @@ const App: React.FC = () => {
 				)
 			);
 			tween.to({ balance });
+			//* Test script interrupt here
+			runTestSpins(GAME.current);
+			return;
 			STATE = EGameStates.SpinningState;
-
 			//Call to the game file to start the spin
 			GAME.current.spin(0);
 			setTimeout(() => {
