@@ -6,9 +6,6 @@ export class Ruins {
 	 *
 	 * @param game - The game object that is currently being manipulated
 	 */
-	checkForRuins(game) {
-		if (this.hasRuins) {
-			console.log("there are ruins");
-		}
-	}
+
+	//? This will be a place that the scoring algorithm calls to when there are ruins!
 }

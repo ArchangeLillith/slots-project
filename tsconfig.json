@@ -17,5 +17,5 @@
 		"noEmit": true,
 		"jsx": "react-jsx"
 	},
-	"include": ["src"]
+	"include": ["src", "old-code/states.js", "old-code/input.js"]
 }

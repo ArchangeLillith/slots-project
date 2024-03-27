@@ -8,9 +8,12 @@ import ReelBorders from "./Components/reel-borders.tsx";
 import * as TWEEN from "@tweenjs/tween.js";
 import runTestSpins from "./game.spec.ts";
 
+//These need to sit here because if they're within the compenent they interfere with the workings of everything on component reload
+let firstTime = true;
+let STATE = EGameStates.LoadingState;
+
 const App: React.FC = () => {
 	// console.log(`RELOADED APP`);
-	let STATE = EGameStates.LoadingState;
 	let DEBUG = true;
 	const CANVAS = useRef<HTMLCanvasElement>(null);
 	const CTX = useRef<CanvasRenderingContext2D | null>(null);
@@ -32,7 +35,9 @@ const App: React.FC = () => {
 	});
 
 	const setUp = () => {
+		if (!firstTime) return;
 		//If the canvas exists adn we have a hold on the current one
+		firstTime = false;
 		if (CANVAS.current) {
 			//Get the context of the canvas
 			CTX.current = CANVAS.current.getContext("2d");
@@ -52,11 +57,13 @@ const App: React.FC = () => {
 
 				//Set initial state
 				STATE = EGameStates.IdleState;
-				//Initiialize the pieces into the array and onto the canvas and let it know we're not running a test
+				//Initialize the pieces into the array and onto the canvas and let it know we're not running a test
+				//Passing false means we're not testing
 				GAME.current.initialize(false);
 				//Start the TWEEN so we can have nice animations on our values
 				// tween.start();
 				//Start the animation loop
+
 				animate();
 			}
 		}
@@ -111,8 +118,7 @@ const App: React.FC = () => {
 					formatCurrency(balance - (coinsPerLine / 100) * LINES_IN_PLAY)
 				)
 			);
-			tween.to({ balance });
-			// //* Test script interrupt here
+			//* Test script interrupt here
 			// runTestSpins(GAME.current);
 			// return;
 			STATE = EGameStates.SpinningState;
@@ -145,11 +151,11 @@ const App: React.FC = () => {
 				}, 1500);
 				setTimeout(() => {
 					const returnedWinnings = GAME.current.stopSpin(4);
-					setWinnings(returnedWinnings);
+					//Manually reset the state
 					STATE = EGameStates.IdleState;
+					setWinnings(returnedWinnings);
 					setBalance(balance + returnedWinnings);
 				}, 2000);
-				//Manually reset the state
 			}, 2000);
 		}
 

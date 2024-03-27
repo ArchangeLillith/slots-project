@@ -1,9 +1,7 @@
 import { EGameStates } from "./Utils/Enum.ts";
 import { Symbols } from "./Classes/symbols.ts";
 import { FINAL_LOCATIONS_MAP, FinalLocation } from "./Utils/Types.ts";
-import InputHandler from "./input.js";
 import scoringAlgorithm from "./Utils/scoring.ts";
-import * as TWEEN from "@tweenjs/tween.js";
 
 //Global definitions
 let SYMBOLS: Symbols[] = [];
@@ -30,7 +28,6 @@ export class Game {
 		this.canvas = canvas;
 		this.width = width;
 		this.height = height;
-		this.input = new InputHandler(this);
 		this.debug = true;
 		this.score = 0;
 		this.gameOver = false;
@@ -117,37 +114,37 @@ export class Game {
 		//? When implimenting another game there should be a check here to make sure the lines for scoring are correct
 		//REFACTOR this is going to thave if checks depending on which lines the player has selected
 		const scoringArray = [];
-		//Color associate with a graphic that lays out the lines visualy for reference
+		//Color associate with a graphic that lays out the lines visually for reference
+
 		//RED
 		scoringArray.push(topRow);
 		scoringArray.push(midRow);
 		scoringArray.push(botRow);
-		// console.log(`FINAL`, topRow, midRow, botRow);
-		//GREEN
-		scoringArray.push([topRow[0], topRow[1], midRow[2], topRow[3], topRow[4]]);
-		scoringArray.push([topRow[0], topRow[1], midRow[2], topRow[3], topRow[4]]);
-		scoringArray.push([midRow[0], midRow[1], botRow[2], midRow[3], midRow[4]]);
-		//BLUE
-		scoringArray.push([botRow[0], botRow[1], midRow[2], botRow[3], botRow[4]]);
-		scoringArray.push([midRow[0], midRow[1], topRow[2], midRow[3], midRow[4]]);
-		//YELLOW
-		scoringArray.push([topRow[0], topRow[1], midRow[2], botRow[3], botRow[4]]);
-		scoringArray.push([botRow[0], botRow[1], midRow[2], topRow[3], topRow[4]]);
-		//CYAN
-		scoringArray.push([botRow[0], midRow[1], topRow[2], midRow[3], botRow[4]]);
-		scoringArray.push([topRow[0], midRow[1], botRow[2], midRow[3], topRow[4]]);
-		//PURPLE
-		scoringArray.push([midRow[0], topRow[1], midRow[2], botRow[3], midRow[4]]);
-		scoringArray.push([midRow[0], botRow[1], midRow[2], topRow[3], midRow[4]]);
-		//FUSHIA
-		scoringArray.push([midRow[0], topRow[1], topRow[2], topRow[3], midRow[4]]);
-		scoringArray.push([midRow[0], botRow[1], botRow[2], botRow[3], midRow[4]]);
+		//DARK BLUE
+		scoringArray.push(topRow[0], topRow[1], midRow[2], topRow[3], topRow[4]);
+		scoringArray.push(midRow[0], midRow[1], topRow[2], midRow[3], midRow[4]);
+		scoringArray.push(botRow[0], botRow[1], midRow[2], botRow[3], botRow[4]);
+		scoringArray.push(midRow[0], midRow[1], botRow[2], midRow[3], midRow[4]);
+		//MAGENTA
+		scoringArray.push(topRow[0], midRow[1], topRow[2], midRow[3], topRow[4]);
+		scoringArray.push(botRow[0], midRow[1], botRow[2], midRow[3], botRow[4]);
+		scoringArray.push(midRow[0], topRow[1], midRow[2], topRow[3], midRow[4]);
+		scoringArray.push(midRow[0], botRow[1], midRow[2], botRow[3], midRow[4]);
 		//ORANGE
-		scoringArray.push([midRow[0], topRow[1], midRow[2], topRow[3], midRow[4]]);
-		scoringArray.push([midRow[0], botRow[1], midRow[2], botRow[3], midRow[4]]);
-		//DARK GREEN
-		scoringArray.push([botRow[0], midRow[1], midRow[2], midRow[3], botRow[4]]);
-		scoringArray.push([topRow[0], midRow[1], midRow[2], midRow[3], topRow[4]]);
+		scoringArray.push(midRow[0], topRow[1], midRow[2], botRow[3], midRow[4]);
+		scoringArray.push(midRow[0], botRow[1], midRow[2], topRow[3], midRow[4]);
+		//GREEN
+		scoringArray.push(topRow[0], midRow[1], midRow[2], midRow[3], topRow[4]);
+		scoringArray.push(botRow[0], midRow[1], midRow[2], midRow[3], botRow[4]);
+		scoringArray.push(midRow[0], topRow[1], topRow[2], topRow[3], midRow[4]);
+		scoringArray.push(midRow[0], botRow[1], botRow[2], botRow[3], midRow[4]);
+		//CYAN
+		scoringArray.push(topRow[0], midRow[1], botRow[2], midRow[3], topRow[4]);
+		scoringArray.push(botRow[0], midRow[1], topRow[2], midRow[3], botRow[4]);
+		//YELLOW
+		scoringArray.push(topRow[0], topRow[1], midRow[2], botRow[3], botRow[4]);
+		scoringArray.push(botRow[0], botRow[1], midRow[2], topRow[3], topRow[4]);
+
 		let winnings = scoringAlgorithm(scoringArray);
 		console.log(`winnings ${winnings}`);
 		return winnings;
