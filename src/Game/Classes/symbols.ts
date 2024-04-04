@@ -1,5 +1,9 @@
-import { ESymbolFrequency90, ESymbolValues75 } from "../Utils/Enum";
+import { ESymbolValues90 } from "../Utils/Enum";
 
+/**
+ * Class for symbol constants
+ **Nothing in here should be dynamic, this should be a read only file
+ */
 export class Symbols {
 	height: number;
 	width: number;
@@ -10,6 +14,7 @@ export class Symbols {
 	y: number;
 	canMove: boolean;
 	image: CanvasImageSource | null;
+	symbolName: string | null;
 	constructor(canvas: HTMLCanvasElement, colIndex: number, rowIndex: number) {
 		this.height = 150;
 		this.width = 150;
@@ -20,8 +25,12 @@ export class Symbols {
 		this.y = this.rowIndex * (canvas.height / 3.55) - this.height;
 		this.image = null;
 		this.canMove = false;
+		this.symbolName = null;
 	}
-	//This is going to pause when any state except for spinning is enabled as there's no need for it in any other state (I think...)
+
+	/**
+	 * Update for every symbol to create the movement on the canvas while the animate loop is running
+	 */
 	update(context: CanvasRenderingContext2D, speed = 0) {
 		// console.log(`this.y`, this.y, "this.x", this.x);
 		if (this.canMove) this.y += speed;
@@ -40,75 +49,65 @@ export class Symbols {
 
 export class Otter extends Symbols {
 	symbolName: string;
-	symbolFrequency: number;
 	value: number;
 	constructor(canvas: HTMLCanvasElement, rowIndex: number, colIndex: number) {
 		super(canvas, rowIndex, colIndex);
 		//Zach how about the typing here?
 		this.image = document.getElementById("otter") as CanvasImageSource;
 		this.symbolName = "otter";
-		this.symbolFrequency = ESymbolFrequency90.Otter;
-		this.value = ESymbolValues75.Otter;
+		this.value = ESymbolValues90.Otter;
 	}
 }
 
 export class Eyrie extends Symbols {
 	symbolName: string;
-	symbolFrequency: number;
 	value: number;
 	constructor(canvas: HTMLCanvasElement, rowIndex: number, colIndex: number) {
 		super(canvas, rowIndex, colIndex);
 		this.image = document.getElementById("eyrie") as CanvasImageSource;
 		this.symbolName = "eyrie";
-		this.symbolFrequency = ESymbolFrequency90.Eyrie;
-		this.value = ESymbolValues75.Eyrie;
+		this.value = ESymbolValues90.Eyrie;
 	}
 }
 export class Cat extends Symbols {
 	symbolName: string;
-	symbolFrequency: number;
 	value: number;
 	constructor(canvas: HTMLCanvasElement, rowIndex: number, colIndex: number) {
 		super(canvas, rowIndex, colIndex);
 		this.image = document.getElementById("cat") as CanvasImageSource;
 		this.symbolName = "cat";
-		this.symbolFrequency = ESymbolFrequency90.Cat;
-		this.value = ESymbolValues75.Cat;
+		this.value = ESymbolValues90.Cat;
 	}
 }
 export class Corvid extends Symbols {
 	symbolName: string;
-	symbolFrequency: number;
 	value: number;
 	constructor(canvas: HTMLCanvasElement, rowIndex: number, colIndex: number) {
 		super(canvas, rowIndex, colIndex);
 		this.image = document.getElementById("corvid") as CanvasImageSource;
 		this.symbolName = "corvid";
-		this.symbolFrequency = ESymbolFrequency90.Corvid;
-		this.value = ESymbolValues75.Corvid;
+		this.value = ESymbolValues90.Corvid;
 	}
 }
+
 export class Alliance extends Symbols {
 	symbolName: string;
-	symbolFrequency: number;
 	value: number;
 	constructor(canvas: HTMLCanvasElement, rowIndex: number, colIndex: number) {
 		super(canvas, rowIndex, colIndex);
 		this.image = document.getElementById("alliance") as CanvasImageSource;
 		this.symbolName = "alliance";
-		this.symbolFrequency = ESymbolFrequency90.Alliance;
-		this.value = ESymbolValues75.Alliance;
+		this.value = ESymbolValues90.Alliance;
 	}
 }
+
 export class Duchy extends Symbols {
 	symbolName: string;
-	symbolFrequency: number;
 	value: number;
 	constructor(canvas: HTMLCanvasElement, rowIndex: number, colIndex: number) {
 		super(canvas, rowIndex, colIndex);
 		this.image = document.getElementById("duchy") as CanvasImageSource;
 		this.symbolName = "duchy";
-		this.symbolFrequency = ESymbolFrequency90.Duchy;
-		this.value = ESymbolValues75.Duchy;
+		this.value = ESymbolValues90.Duchy;
 	}
 }

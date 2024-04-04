@@ -2,7 +2,8 @@ import { Symbols } from "./Game/Classes/symbols";
 //What tests do we want?
 //A test that runs X amount of games and reports the average, least and most winnings
 
-//Not a typical test, this is for testing the math behind the doc that Rackie wrote for me so it just runs the machine however many times is determined in the number of spins variable and outputs to the console numbers that will show if the math was correct
+//!Not a typical test
+//Test: This is for testing the math behind the doc that Rackie wrote for me so it just runs the machine however many times is determined in the number of spins variable and outputs to the console numbers that will show if the math was correct
 export default function runTestSpins(GAME: any) {
 	let returnedWinnings: number[] = [];
 	let TEST_SYMBOLS_MAP: Symbols[][] = [];
@@ -35,19 +36,23 @@ export default function runTestSpins(GAME: any) {
 			);
 			TEST_SYMBOLS_MAP[k] = colArray;
 		}
-		//Starting the spin
-		GAME.spin(0);
-		GAME.spin(1);
-		GAME.spin(2);
-		GAME.spin(3);
-		GAME.spin(4);
 
-		GAME.stopSpin(0, TEST_SYMBOLS_MAP, SYMBOLS);
-		GAME.stopSpin(1, TEST_SYMBOLS_MAP, SYMBOLS);
-		GAME.stopSpin(2, TEST_SYMBOLS_MAP, SYMBOLS);
-		GAME.stopSpin(3, TEST_SYMBOLS_MAP, SYMBOLS);
 		//Pushing the winnings into the array to capture the score
-		returnedWinnings.push(GAME.stopSpin(4, TEST_SYMBOLS_MAP, SYMBOLS));
+		let topRow = [];
+		let midRow = [];
+		let botRow = [];
+		for (let i = 1; i < SYMBOLS.length; i += 5) {
+			topRow.push(SYMBOLS[i]);
+		}
+		for (let i = 2; i < SYMBOLS.length; i += 5) {
+			midRow.push(SYMBOLS[i]);
+		}
+		for (let i = 3; i < SYMBOLS.length; i += 5) {
+			botRow.push(SYMBOLS[i]);
+		}
+		//call util for making scoring arrays
+		//then call scoring array with that new 2d array
+		//the return from ther socring array is then pushed to the returnedWinnings as the entry for this loop
 	}
 	const average = (returnedWinnings: number[]) =>
 		returnedWinnings.reduce((p: number, c: number) => p + c, 0) /

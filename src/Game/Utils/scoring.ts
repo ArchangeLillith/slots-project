@@ -1,3 +1,11 @@
+/**
+ * The Beefy Boi
+ * @param scoringArray - An array of five that's created along one of the scoring lines
+ * Core of the scoring algorithm, the parent that handles the main scoring and calls for different handlers for other scoring mechanics.
+ * Also sends statistics to the stats file
+ * @returns The final score
+ * ? Future consideration: Ruins and other mechanics for scoring
+ * */
 export default function scoringAlgorithm(scoringArray: any) {
 	//REFACTOR check for ruins here
 	let winnings: number = 0;
@@ -26,6 +34,12 @@ export default function scoringAlgorithm(scoringArray: any) {
 	return winnings;
 }
 
+/**
+ *
+ * @param array - The array we're working in
+ * @param j - The index of the image that we're referencing
+ * Swaps the image from a non-winning image to the winning image
+ * */
 function changeImage(array: any, j: number) {
 	const allianceWinner = document.getElementById("alliance-winner");
 	const otterWinner = document.getElementById("otter-winner");

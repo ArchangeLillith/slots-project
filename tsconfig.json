@@ -17,5 +17,9 @@
 		"noEmit": true,
 		"jsx": "react-jsx"
 	},
-	"include": ["src", "old-code/states.js", "old-code/input.js"]
+	"include": [
+		"src",
+		"old-code/states.js",
+		"old-code/input.js, masterMaker.test.ts"
+	]
 }

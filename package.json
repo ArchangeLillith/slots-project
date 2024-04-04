@@ -2,7 +2,9 @@
 	"name": "slots-project",
 	"version": "0.1.0",
 	"private": true,
+	"type": "module",
 	"dependencies": {
+		"@playcanvas/canvas-mock": "^1.0.1",
 		"@testing-library/jest-dom": "^5.17.0",
 		"@testing-library/react": "^13.4.0",
 		"@testing-library/user-event": "^13.5.0",
@@ -14,6 +16,8 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-scripts": "5.0.1",
+		"ts-node": "^10.9.2",
+		"tsx": "^4.7.1",
 		"typescript": "^4.9.5",
 		"web-vitals": "^2.1.4"
 	},

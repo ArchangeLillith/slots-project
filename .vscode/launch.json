@@ -14,6 +14,36 @@
 				"<node_internals>/**",
 				"${workspaceFolder}/node_modules/**/*.js"
 			]
+		},
+		{
+			"name": "Test debugger, TSX",
+			"type": "node",
+			"request": "launch",
+
+			// Debug current file in VSCode
+			"program": "${file}",
+
+			/*
+			Path to tsx binary
+			Assuming locally installed
+			*/
+			"runtimeExecutable": "${workspaceFolder}/node_modules/.bin/tsx",
+
+			/*
+			Open terminal when debugging starts (Optional)
+			Useful to see console.logs
+			*/
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen",
+
+			// Files to exclude from debugger (e.g. call stack)
+			"skipFiles": [
+				// Node.js internal core modules
+				"<node_internals>/**",
+
+				// Ignore all dependencies (optional)
+				"${workspaceFolder}/node_modules/**"
+			]
 		}
 	]
 }

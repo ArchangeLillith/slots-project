@@ -1,3 +1,6 @@
+/**
+ * Game states to determine what state we're in; this tells our game what can and cannot be done, ie can't change game during spin
+ */
 export const EGameStates = {
 	SpinningState: "SPINNING",
 	StoppingState: "STOPPING",
@@ -5,7 +8,9 @@ export const EGameStates = {
 	IdleState: "IDLE",
 	RuinsState: "RUINS",
 };
-
+/**
+ * All eSymbolFrequencies handle the percentage a symbol should appear for their respective win percent, denoted by the number at the end of the name
+ */
 //*Should equal 1 all together!!
 export const ESymbolFrequency75 = {
 	Otter: 0.14,
@@ -57,6 +62,14 @@ export const ESymbolValues75 = {
 	Cat: 30,
 	Eyrie: 25,
 	Corvid: 16,
+	Alliance: 10,
+	Duchy: 10,
+};
+export const ESymbolValues90 = {
+	Otter: 80,
+	Cat: 40,
+	Eyrie: 30,
+	Corvid: 25,
 	Alliance: 10,
 	Duchy: 10,
 };

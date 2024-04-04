@@ -5,8 +5,8 @@ import { drawStatusText } from "./Game/Utils/drawOnCanvas.ts";
 import { EGameStates } from "./Game/Utils/Enum.ts";
 import { masterArrayMaker } from "./Game/Utils/masterMaker.ts";
 import ReelBorders from "./Components/reel-borders.tsx";
-import * as TWEEN from "@tweenjs/tween.js";
-import runTestSpins from "./game.spec.ts";
+import { createArrays } from "./Game/Utils/setup.ts";
+import { Symbols } from "./Game/Classes/symbols.ts";
 
 //These need to sit here because if they're within the compenent they interfere with the workings of everything on component reload
 let firstTime = true;
@@ -26,9 +26,13 @@ const App: React.FC = () => {
 	const [winnings, setWinnings] = React.useState(-1);
 	let LINES_IN_PLAY: number = 5;
 	let WAGER: number = (coinsPerLine / 100) * LINES_IN_PLAY;
-	let initialBalance = { balance };
-	// Create a tween for position first
-	var tween = new TWEEN.Tween(initialBalance);
+	let stopCol0Timeout: string | number | NodeJS.Timeout | undefined;
+	let stopCol1Timeout: string | number | NodeJS.Timeout | undefined;
+	let stopCol2Timeout: string | number | NodeJS.Timeout | undefined;
+	let stopCol3Timeout: string | number | NodeJS.Timeout | undefined;
+	let stopCol4Timeout: string | number | NodeJS.Timeout | undefined;
+	let stopTimeOut: string | number | NodeJS.Timeout | undefined;
+	let spinCol4Timeout: NodeJS.Timeout;
 
 	useEffect(() => {
 		setUp();
@@ -57,13 +61,13 @@ const App: React.FC = () => {
 
 				//Set initial state
 				STATE = EGameStates.IdleState;
-				//Initialize the pieces into the array and onto the canvas and let it know we're not running a test
-				//Passing false means we're not testing
-				GAME.current.initialize(false);
-				//Start the TWEEN so we can have nice animations on our values
-				// tween.start();
+				//Will return a map and the SYMBOLS array
+				const arrays: { SYMBOLS_ARRAY: Symbols[]; SYMBOLS_MAP: Symbols[][] } =
+					createArrays(CANVAS.current, 5, 5, MASTER_SYMBOL_LIST);
+				//Set the GAME SYMBOLS to what the setup has done
+				GAME.current.SYMBOLS = arrays.SYMBOLS_ARRAY;
+				GAME.current.SYMBOLS_MAP = arrays.SYMBOLS_MAP;
 				//Start the animation loop
-
 				animate();
 			}
 		}
@@ -79,7 +83,12 @@ const App: React.FC = () => {
 			if (DEBUG) drawStatusText(CTX.current, STATE);
 
 			//Calling game update function and passing state so it knows what to do
-			GAME.current.update(CTX.current, STATE);
+			GAME.current.update(
+				CTX.current,
+				STATE,
+				GAME.current.SYMBOLS,
+				GAME.current.SYMBOLS_MAP
+			);
 
 			// Check if game is not over and animation is not already scheduled
 			if (!GAME.current.gameOver && !animationScheduled.current) {
@@ -107,9 +116,25 @@ const App: React.FC = () => {
 		return x.toFixed(2);
 	}
 
+	function createSpinTimeOut(column: number, delay: number) {
+		return setTimeout(() => {
+			GAME.current.spin(column, GAME.current.SYMBOLS_MAP);
+		}, delay);
+	}
+
+	function createStopTimeOut(column: number, delay: number) {
+		return setTimeout(() => {
+			GAME.current.stopSpin(
+				column,
+				GAME.current.SYMBOLS_MAP,
+				GAME.current.SYMBOLS
+			);
+		}, delay);
+	}
+
 	const spinButtonClick = () => {
 		//Make sure we have a game to latch onto, and that the state is idle as the player shouldn't be able to do any of this if it's in any other state
-		if (GAME.current && STATE === EGameStates.IdleState) {
+		if (GAME.current) {
 			//Resets the winnings to ensure nothing gets cross added accidentally
 			setWinnings(0);
 			//Subtracts the amoutn of the wager from the balance
@@ -118,47 +143,58 @@ const App: React.FC = () => {
 					formatCurrency(balance - (coinsPerLine / 100) * LINES_IN_PLAY)
 				)
 			);
-			//* Test script interrupt here
-			// runTestSpins(GAME.current);
-			// return;
-			STATE = EGameStates.SpinningState;
-			//Call to the game file to start the spin
-			GAME.current.spin(0);
-			setTimeout(() => {
-				GAME.current.spin(1);
-			}, 500);
-			setTimeout(() => {
-				GAME.current.spin(2);
-			}, 1000);
-			setTimeout(() => {
-				GAME.current.spin(3);
-			}, 1500);
-			setTimeout(() => {
-				GAME.current.spin(4);
-			}, 2000);
-
-			setTimeout(() => {
+			//The initial to get the reels spinning
+			if (STATE !== EGameStates.SpinningState) {
+				STATE = EGameStates.SpinningState;
+				createSpinTimeOut(0, 0);
+				createSpinTimeOut(1, 500);
+				createSpinTimeOut(2, 1000);
+				createSpinTimeOut(3, 1500);
+				spinCol4Timeout = createSpinTimeOut(4, 2000);
+				stopTimeOut = setTimeout(() => {
+					STATE = EGameStates.StoppingState;
+					stopCol0Timeout = createStopTimeOut(0, 1000);
+					stopCol1Timeout = createStopTimeOut(1, 1500);
+					stopCol2Timeout = createStopTimeOut(2, 2000);
+					stopCol3Timeout = createStopTimeOut(3, 2500);
+					setTimeout(() => {
+						const returnedWinnings = GAME.current.stopSpin(
+							4,
+							GAME.current.SYMBOLS_MAP,
+							GAME.current.SYMBOLS
+						);
+						//Manually reset the state
+						STATE = EGameStates.IdleState;
+						setWinnings(returnedWinnings);
+						setBalance(balance + returnedWinnings);
+					}, 3000);
+				}, 4000);
+				//If the player DID stop the reels
+			} else {
 				STATE = EGameStates.StoppingState;
-				GAME.current.stopSpin(0);
+				clearTimeout(stopTimeOut);
+				clearTimeout(stopCol0Timeout);
+				clearTimeout(stopCol1Timeout);
+				clearTimeout(stopCol2Timeout);
+				clearTimeout(stopCol3Timeout);
+				clearTimeout(stopCol4Timeout);
+				stopCol0Timeout = createStopTimeOut(0, 250);
+				stopCol1Timeout = createStopTimeOut(1, 500);
+				stopCol2Timeout = createStopTimeOut(2, 750);
+				stopCol3Timeout = createStopTimeOut(3, 1000);
 				setTimeout(() => {
-					GAME.current.stopSpin(1);
-				}, 500);
-				setTimeout(() => {
-					GAME.current.stopSpin(2);
-				}, 1000);
-				setTimeout(() => {
-					GAME.current.stopSpin(3);
-				}, 1500);
-				setTimeout(() => {
-					const returnedWinnings = GAME.current.stopSpin(4);
+					const returnedWinnings = GAME.current.stopSpin(
+						4,
+						GAME.current.SYMBOLS_MAP,
+						GAME.current.SYMBOLS
+					);
 					//Manually reset the state
-					STATE = EGameStates.IdleState;
 					setWinnings(returnedWinnings);
 					setBalance(balance + returnedWinnings);
-				}, 2000);
-			}, 2000);
+					STATE = EGameStates.IdleState;
+				}, 1250);
+			}
 		}
-
 		setSmallJackpot(smallJackpot + 0.05);
 		setLargeJackpot(largeJackpot + 0.1);
 	};
